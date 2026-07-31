@@ -611,6 +611,33 @@ section { padding: 5rem 0; }
   font-size: 0.9rem;
 }
 
+.grid-2 {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+@media (min-width: 700px) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Compound catalog (name / price rows) */
+.compound-list {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+.compound-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.compound-list__item:last-child { border-bottom: none; }
+.compound-list__name { color: var(--color-text); }
+.compound-list__price { color: var(--color-accent); font-weight: 600; white-space: nowrap; }
+
 /* Numbered column grids (philosophy / method / stats) */
 .grid-4 {
   display: grid;
