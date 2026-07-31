@@ -638,6 +638,43 @@ section { padding: 5rem 0; }
 .compound-list__name { color: var(--color-text); }
 .compound-list__price { color: var(--color-accent); font-weight: 600; white-space: nowrap; }
 
+/* Discount code box */
+.discount-box {
+  max-width: 420px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+.discount-box__label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+.discount-box__row {
+  display: flex;
+  gap: 0.75rem;
+}
+.discount-box__input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+}
+.discount-box__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+.discount-box__message {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  min-height: 1.2em;
+}
+
 /* Numbered column grids (philosophy / method / stats) */
 .grid-4 {
   display: grid;

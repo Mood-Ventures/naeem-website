@@ -23,7 +23,6 @@
   <section class="hero">
     <div class="container hero__inner reveal">
       <p class="eyebrow">SuperMood Research</p>
-      <h1>The Biology to Match the Ambition.</h1>
       <p class="hero__subtitle">Research compounds available for direct order.</p>
       <p class="accent" style="font-weight:600;">For research and laboratory use only. Not for human consumption.</p>
     </div>
@@ -34,63 +33,71 @@
     <div class="container container--narrow reveal">
       <h2 style="text-align:center;">The Catalog</h2>
 
-      <h3>Weight Loss</h3>
+      <div class="discount-box">
+        <label class="discount-box__label" for="discount-code">Have a discount code?</label>
+        <div class="discount-box__row">
+          <input class="discount-box__input" type="text" id="discount-code" placeholder="Enter code">
+          <button type="button" id="apply-discount" class="btn btn--primary btn--small">Apply</button>
+        </div>
+        <p class="discount-box__message" id="discount-message"></p>
+      </div>
+
       <h3>GLP-1 Compounds</h3>
       <ul class="compound-list">
-        <li class="compound-list__item"><span class="compound-list__name">Retatrutide 10mg</span><span class="compound-list__price">$210</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Retatrutide 30mg</span><span class="compound-list__price">$285</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Tirzepatide 10mg</span><span class="compound-list__price">$180</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Tirzepatide 30mg</span><span class="compound-list__price">$228</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Tirz / BPC-157 30mg</span><span class="compound-list__price">$228</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Tirz / BPC-157 60mg</span><span class="compound-list__price">$300</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Cagrilintide 10mg</span><span class="compound-list__price">$255</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">AOD-9604 5mg</span><span class="compound-list__price">$120</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">AOD-9604 10mg</span><span class="compound-list__price">$135</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Retatrutide 10mg</span><span class="compound-list__price" data-base-price="210">$210</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Retatrutide 30mg</span><span class="compound-list__price" data-base-price="285">$285</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Tirzepatide 10mg</span><span class="compound-list__price" data-base-price="180">$180</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Tirzepatide 30mg</span><span class="compound-list__price" data-base-price="228">$228</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Tirz / BPC-157 30mg</span><span class="compound-list__price" data-base-price="228">$228</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Tirz / BPC-157 60mg</span><span class="compound-list__price" data-base-price="300">$300</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Cagrilintide 10mg</span><span class="compound-list__price" data-base-price="255">$255</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">AOD-9604 5mg</span><span class="compound-list__price" data-base-price="120">$120</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">AOD-9604 10mg</span><span class="compound-list__price" data-base-price="135">$135</span></li>
       </ul>
 
       <h3 style="margin-top:2.5rem;">Recovery &amp; Performance</h3>
       <ul class="compound-list">
-        <li class="compound-list__item"><span class="compound-list__name">BPC-157 10mg</span><span class="compound-list__price">$99</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Wolverine (BPC/TB4) 13mg</span><span class="compound-list__price">$150</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">TB4 Full Sequence 10mg</span><span class="compound-list__price">$144</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Thymosin Alpha-1 10mg</span><span class="compound-list__price">$138</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">TA1 Complex 10mg</span><span class="compound-list__price">$165</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">KPV 10mg</span><span class="compound-list__price">$129</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">LL37 10mg</span><span class="compound-list__price">$135</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">ARA-290 20mg</span><span class="compound-list__price">$123</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">BPC-157 10mg</span><span class="compound-list__price" data-base-price="99">$99</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Wolverine (BPC/TB4) 13mg</span><span class="compound-list__price" data-base-price="150">$150</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">TB4 Full Sequence 10mg</span><span class="compound-list__price" data-base-price="144">$144</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Thymosin Alpha-1 10mg</span><span class="compound-list__price" data-base-price="138">$138</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">TA1 Complex 10mg</span><span class="compound-list__price" data-base-price="165">$165</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">KPV 10mg</span><span class="compound-list__price" data-base-price="129">$129</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">LL37 10mg</span><span class="compound-list__price" data-base-price="135">$135</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">ARA-290 20mg</span><span class="compound-list__price" data-base-price="123">$123</span></li>
       </ul>
 
       <h3 style="margin-top:2.5rem;">Growth Hormone &amp; Longevity</h3>
       <ul class="compound-list">
-        <li class="compound-list__item"><span class="compound-list__name">Tesamorelin 10mg</span><span class="compound-list__price">$138</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Tesamorelin 20mg</span><span class="compound-list__price">$195</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Tesamorelin / Ipamorelin 10mg</span><span class="compound-list__price">$120</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">CJC-1295 / Ipamorelin 10mg</span><span class="compound-list__price">$117</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Epithalon 50mg</span><span class="compound-list__price">$147</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">GHK-Cu 50mg</span><span class="compound-list__price">$102</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">MOTS-C 10mg</span><span class="compound-list__price">$108</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">SS31 10mg</span><span class="compound-list__price">$126</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Pinealon 20mg</span><span class="compound-list__price">$135</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">VIP 10mg</span><span class="compound-list__price">$129</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Tesamorelin 10mg</span><span class="compound-list__price" data-base-price="138">$138</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Tesamorelin 20mg</span><span class="compound-list__price" data-base-price="195">$195</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Tesamorelin / Ipamorelin 10mg</span><span class="compound-list__price" data-base-price="120">$120</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">CJC-1295 / Ipamorelin 10mg</span><span class="compound-list__price" data-base-price="117">$117</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Epithalon 50mg</span><span class="compound-list__price" data-base-price="147">$147</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">GHK-Cu 50mg</span><span class="compound-list__price" data-base-price="102">$102</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">MOTS-C 10mg</span><span class="compound-list__price" data-base-price="108">$108</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">SS31 10mg</span><span class="compound-list__price" data-base-price="126">$126</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Pinealon 20mg</span><span class="compound-list__price" data-base-price="135">$135</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">VIP 10mg</span><span class="compound-list__price" data-base-price="129">$129</span></li>
       </ul>
 
       <h3 style="margin-top:2.5rem;">Wellness &amp; Metabolic</h3>
       <ul class="compound-list">
-        <li class="compound-list__item"><span class="compound-list__name">NAD+ 1000mg</span><span class="compound-list__price">$165</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">L-Glutathione 600mg</span><span class="compound-list__price">$120</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Glow Blend 70mg</span><span class="compound-list__price">$210</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Klow Blend 80mg</span><span class="compound-list__price">$240</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Melanotan II 10mg</span><span class="compound-list__price">$105</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Oxytocin 10mg</span><span class="compound-list__price">$108</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">PT-141 10mg</span><span class="compound-list__price">$99</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Kisspeptin-10 10mg</span><span class="compound-list__price">$117</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">DSIP 10mg</span><span class="compound-list__price">$129</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">NAD+ 1000mg</span><span class="compound-list__price" data-base-price="165">$165</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">L-Glutathione 600mg</span><span class="compound-list__price" data-base-price="120">$120</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Glow Blend 70mg</span><span class="compound-list__price" data-base-price="210">$210</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Klow Blend 80mg</span><span class="compound-list__price" data-base-price="240">$240</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Melanotan II 10mg</span><span class="compound-list__price" data-base-price="105">$105</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Oxytocin 10mg</span><span class="compound-list__price" data-base-price="108">$108</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">PT-141 10mg</span><span class="compound-list__price" data-base-price="99">$99</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Kisspeptin-10 10mg</span><span class="compound-list__price" data-base-price="117">$117</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">DSIP 10mg</span><span class="compound-list__price" data-base-price="129">$129</span></li>
       </ul>
 
       <h3 style="margin-top:2.5rem;">Cognitive &amp; Neurological</h3>
       <ul class="compound-list">
-        <li class="compound-list__item"><span class="compound-list__name">Semax 20mg</span><span class="compound-list__price">$117</span></li>
-        <li class="compound-list__item"><span class="compound-list__name">Selank 20mg</span><span class="compound-list__price">$117</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Semax 20mg</span><span class="compound-list__price" data-base-price="117">$117</span></li>
+        <li class="compound-list__item"><span class="compound-list__name">Selank 20mg</span><span class="compound-list__price" data-base-price="117">$117</span></li>
       </ul>
     </div>
   </section>
@@ -100,10 +107,9 @@
     <div class="container container--narrow reveal">
       <h2 style="text-align:center;">How to Order</h2>
       <ol class="credentials">
-        <li>Pick your compounds from the catalog above and note the total.</li>
+        <li>Pick your compounds from the catalog above and note the total (with your discount applied, if you used a code).</li>
         <li>Send payment via Zelle to (646) 318-0516.</li>
-        <li>Text your order and payment confirmation to (415) 413-7426.</li>
-        <li>Want labs and coaching support too? Mention it in that same text and we&rsquo;ll follow up separately.</li>
+        <li>Text your order and payment confirmation via WhatsApp to (646) 318-0516.</li>
       </ol>
     </div>
   </section>
@@ -241,5 +247,51 @@
 </footer>
 
 <script src="assets/js/main.js"></script>
+<script>
+(function () {
+  var codes = { SAVE10: 0.10, SAVE15: 0.15, SAVE20: 0.20 };
+  var input = document.getElementById('discount-code');
+  var button = document.getElementById('apply-discount');
+  var message = document.getElementById('discount-message');
+  var prices = document.querySelectorAll('.compound-list__price');
+
+  function formatPrice(amount) {
+    var rounded = Math.round(amount * 100) / 100;
+    return rounded % 1 === 0 ? '$' + rounded : '$' + rounded.toFixed(2);
+  }
+
+  function resetPrices() {
+    prices.forEach(function (el) {
+      el.textContent = formatPrice(parseFloat(el.getAttribute('data-base-price')));
+    });
+  }
+
+  function applyDiscount() {
+    var code = input.value.trim().toUpperCase();
+    if (!code) {
+      resetPrices();
+      message.textContent = '';
+      return;
+    }
+    var discount = codes[code];
+    if (!discount) {
+      message.textContent = 'Invalid code.';
+      return;
+    }
+    prices.forEach(function (el) {
+      var base = parseFloat(el.getAttribute('data-base-price'));
+      el.textContent = formatPrice(base * (1 - discount));
+    });
+    message.textContent = Math.round(discount * 100) + '% off applied.';
+  }
+
+  if (button) {
+    button.addEventListener('click', applyDiscount);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') applyDiscount();
+    });
+  }
+})();
+</script>
 </body>
 </html>
