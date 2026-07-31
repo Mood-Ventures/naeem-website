@@ -4,5 +4,5 @@ Disallow: /supermood-invitation
 Disallow: /supermood-invitation.html
 Disallow: /peak-life-os-private
 Disallow: /peak-life-os-private.html
-Disallow: /peptides-private
-Disallow: /peptides-private.html
+Disallow: /regenerative-private
+Disallow: /regenerative-private.html
