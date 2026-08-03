@@ -8,3 +8,5 @@ Disallow: /research-private
 Disallow: /research-private.html
 Disallow: /protocols-private
 Disallow: /protocols-private.html
+Disallow: /research-overview-private
+Disallow: /research-overview-private.html
