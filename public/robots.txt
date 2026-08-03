@@ -10,3 +10,5 @@ Disallow: /protocols-private
 Disallow: /protocols-private.html
 Disallow: /research-overview-private
 Disallow: /research-overview-private.html
+Disallow: /research-products-private
+Disallow: /research-products-private.html
