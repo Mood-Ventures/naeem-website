@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Peak Human OS | Naeem Mahmood</title>
+<meta name="description" content="Rewire your inner architecture. Perform at your peak. Live a life you actually feel. A private coaching program for high-achieving men.">
+<meta name="author" content="Naeem Mahmood">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0a08;
+    --bg-alt: #121009;
+    --bg-card: #17140e;
+    --text: #f2ede2;
+    --text-muted: #9c9385;
+    --border: rgba(242, 237, 226, 0.1);
+    --gold: #c8a24c;
+    --gold-bright: #e0c179;
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --container-width: 1140px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  .container { max-width: var(--container-width); margin: 0 auto; padding: 0 1.5rem; }
+  .container--narrow { max-width: 780px; }
+  section { padding: 6rem 0; }
+  .section--alt { background: var(--bg-alt); }
+  h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 600; line-height: 1.15; margin: 0 0 1.25rem; color: #fff; }
+  h1 { font-size: clamp(2.5rem, 6vw, 4.25rem); font-weight: 600; }
+  h2 { font-size: clamp(2rem, 4vw, 3rem); text-align: center; }
+  h3 { font-size: 1.5rem; }
+  p { margin: 0 0 1rem; color: var(--text-muted); }
+  .eyebrow {
+    display: block;
+    color: var(--gold);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    margin: 0 0 1.25rem;
+  }
+  .accent { color: var(--gold); }
+  a { color: var(--gold); }
+  .skip-link { position: absolute; left: -999px; top: 0; background: var(--gold); color: var(--bg); padding: 0.75rem 1rem; z-index: 300; }
+  .skip-link:focus { left: 0; }
+
+  /* Nav */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(11, 10, 8, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav__inner { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem; }
+  .nav__logo { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 600; color: #fff; text-decoration: none; letter-spacing: 0.02em; }
+  .nav__logo span { color: var(--gold); }
+  .nav .btn { padding: 0.7rem 1.6rem; font-size: 0.85rem; }
+  body { padding-top: 68px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 1rem 2.25rem;
+    border-radius: 2px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    border: 1px solid var(--gold);
+    transition: all 0.25s ease;
+  }
+  .btn--primary { background: var(--gold); color: #171307; }
+  .btn--primary:hover { background: var(--gold-bright); border-color: var(--gold-bright); transform: translateY(-2px); }
+  .btn--ghost { background: transparent; color: var(--gold); }
+  .btn--ghost:hover { background: rgba(200, 162, 76, 0.1); transform: translateY(-2px); }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2.5rem; }
+
+  /* Hero */
+  .hero { padding: 8rem 0 5rem; text-align: center; position: relative; }
+  .hero__inner { max-width: 860px; margin: 0 auto; }
+  .hero__subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 680px; margin: 0 auto 1rem; }
+
+  /* OS Terminal */
+  .terminal {
+    max-width: 560px;
+    margin: 3rem auto 0;
+    background: #0e0c08;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: left;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+  .terminal__bar { display: flex; gap: 0.4rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+  .terminal__dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(242,237,226,0.15); }
+  .terminal__body { padding: 1.5rem; font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 0.85rem; color: var(--gold); min-height: 140px; }
+  .terminal__line { opacity: 0; white-space: pre-wrap; margin: 0 0 0.5rem; }
+  .terminal__line.is-visible { opacity: 1; }
+  .terminal__cursor { display: inline-block; width: 8px; height: 1em; background: var(--gold); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Problem */
+  .pain-list { list-style: none; margin: 2.5rem auto 0; padding: 0; max-width: 720px; }
+  .pain-list li {
+    padding: 1.1rem 0 1.1rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    color: var(--text);
+    font-size: 1.05rem;
+  }
+  .pain-list li:last-child { border-bottom: none; }
+  .pain-list li::before { content: '\2014'; position: absolute; left: 0; color: var(--gold); }
+
+  /* Pillars */
+  .grid-4 { display: grid; gap: 1.75rem; margin-top: 3rem; }
+  @media (min-width: 700px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
+  .pillar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.25rem 1.75rem;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .pillar-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+  .pillar-card__num { font-family: var(--font-serif); color: var(--gold); font-size: 1.1rem; margin-bottom: 1rem; }
+  .pillar-card p { font-size: 0.95rem; margin-bottom: 0; }
+
+  /* Transformation */
+  .transform-grid { display: grid; gap: 2rem; margin-top: 3rem; }
+  @media (min-width: 800px) { .transform-grid { grid-template-columns: 1fr 1fr; } }
+  .transform-col { border: 1px solid var(--border); border-radius: 4px; padding: 2.25rem; }
+  .transform-col--before { background: var(--bg-card); }
+  .transform-col--after { background: linear-gradient(160deg, rgba(200,162,76,0.08), transparent); border-color: rgba(200,162,76,0.35); }
+  .transform-col h3 { text-align: center; margin-bottom: 1.5rem; }
+  .transform-col--before h3 { color: var(--text-muted); }
+  .transform-col--after h3 { color: var(--gold); }
+  .transform-col ul { list-style: none; margin: 0; padding: 0; }
+  .transform-col li { padding: 0.7rem 0; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.95rem; }
+  .transform-col li:last-child { border-bottom: none; }
+
+  /* Modules */
+  .module-list { margin-top: 3rem; }
+  .module {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.75rem;
+    align-items: start;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .module:last-child { border-bottom: none; }
+  .module__num { font-family: var(--font-serif); font-size: 2.25rem; color: var(--gold); line-height: 1; opacity: 0.6; min-width: 3rem; }
+  .module h3 { margin-bottom: 0.5rem; }
+  .module p { margin-bottom: 0; }
+
+  /* Social proof */
+  .grid-2 { display: grid; gap: 1.75rem; margin-top: 3rem; }
+  @media (min-width: 800px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+  .result-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 2.25rem; border-left: 2px solid var(--gold); }
+  .result-card__name { font-family: var(--font-serif); font-size: 1.3rem; color: #fff; margin-bottom: 0.25rem; }
+  .result-card__role { color: var(--gold); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+  .result-card__headline { color: var(--text); font-weight: 600; margin-bottom: 0.75rem; }
+  .result-card p:last-child { margin-bottom: 0; font-size: 0.95rem; }
+
+  /* Pricing */
+  .pricing-grid { display: grid; gap: 2rem; margin-top: 3rem; align-items: start; }
+  @media (min-width: 900px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+  .price-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 2.75rem 2.25rem; display: flex; flex-direction: column; position: relative; }
+  .price-card--elite { border-color: var(--gold); background: linear-gradient(160deg, rgba(200,162,76,0.08), var(--bg-card)); }
+  .price-card__badge {
+    position: absolute; top: -0.9rem; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: #171307; font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em; padding: 0.35rem 1rem; border-radius: 999px;
+  }
+  .price-card h3 { text-align: center; margin-bottom: 0.5rem; }
+  .price-card__price { text-align: center; font-family: var(--font-serif); font-size: 2.5rem; color: var(--gold); margin-bottom: 0.25rem; }
+  .price-card__terms { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .price-card__features { list-style: none; margin: 0 0 2rem; padding: 0; flex: 1; }
+  .price-card__features li { padding: 0.65rem 0; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.95rem; padding-left: 1.5rem; position: relative; }
+  .price-card__features li:last-child { border-bottom: none; }
+  .price-card__features li::before { content: '\2713'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+  .price-card__cta { text-align: center; }
+  .price-card__cta .btn { width: 100%; }
+
+  /* About */
+  .about-grid { display: grid; gap: 3rem; margin-top: 2.5rem; align-items: start; }
+  @media (min-width: 800px) { .about-grid { grid-template-columns: 280px 1fr; } }
+  .headshot-placeholder {
+    aspect-ratio: 4 / 5;
+    border: 1px dashed var(--border);
+    border-radius: 4px;
+    background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    padding: 1.5rem;
+  }
+  .credentials { list-style: none; margin: 1.5rem 0 0; padding: 0; }
+  .credentials li { padding: 0.75rem 0; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.95rem; }
+  .credentials li::before { content: '\2014\00a0'; color: var(--gold); }
+  .pull-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.6rem;
+    color: #fff;
+    text-align: center;
+    max-width: 720px;
+    margin: 4rem auto 0;
+    line-height: 1.4;
+  }
+  .pull-quote span { display: block; margin-top: 1rem; font-family: var(--font-sans); font-style: normal; font-size: 0.85rem; color: var(--gold); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* Final CTA */
+  .final-cta { text-align: center; }
+  .instagram-cta { margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem; }
+  .instagram-cta a { font-weight: 600; }
+
+  /* Footer */
+  .site-footer { padding: 3rem 0; border-top: 1px solid var(--border); text-align: center; }
+  .site-footer p { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="nav">
+  <div class="container nav__inner">
+    <a class="nav__logo" href="#main">Peak Human <span>OS</span></a>
+    <a class="btn btn--primary" href="#pricing">Apply Now</a>
+  </div>
+</nav>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__inner reveal">
+      <p class="eyebrow">Peak Human OS</p>
+      <h1>Rewire Your Inner Architecture. Perform at Your Peak. Live a Life You Actually Feel.</h1>
+      <p class="hero__subtitle">I help high-achieving men who have everything but feel nothing rewire their identity, optimize their biology, and build a life full of energy, love, and meaning.</p>
+      <div class="cta-row">
+        <a class="btn btn--primary" href="#pricing">Apply for Peak Human OS</a>
+        <a class="btn btn--ghost" href="[CALENDLY_URL]" target="_blank" rel="noopener">Book a Diagnostic Call</a>
+      </div>
+      <div class="terminal" id="terminal">
+        <div class="terminal__bar">
+          <span class="terminal__dot"></span><span class="terminal__dot"></span><span class="terminal__dot"></span>
+        </div>
+        <div class="terminal__body" id="terminal-body"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="section--alt">
+    <div class="container container--narrow reveal" style="text-align:center;">
+      <p class="eyebrow">The Problem</p>
+      <h2>You&rsquo;re Winning on Paper. So Why Does It Feel Like Losing?</h2>
+      <ul class="pain-list" style="text-align:left;">
+        <li>Low energy despite doing &ldquo;all the right things&rdquo;</li>
+        <li>Successful but secretly unfulfilled &mdash; the win never feels like enough</li>
+        <li>No deeply fulfilling intimate relationship</li>
+        <li>Chasing status instead of operating from purpose</li>
+        <li>Making decisions from stress, not strength</li>
+        <li>Spending on coaches, supplements, masterminds, but the root never changes</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Solution: 4 Pillars -->
+  <section>
+    <div class="container container--narrow reveal" style="text-align:center;">
+      <p class="eyebrow">The Solution</p>
+      <h2>Four Pillars. One Operating System.</h2>
+    </div>
+    <div class="container reveal">
+      <div class="grid-4">
+        <div class="pillar-card">
+          <div class="pillar-card__num">01</div>
+          <h3>Mind &amp; Identity</h3>
+          <p>Rewire the belief architecture running your decisions, your ceiling, and your self-worth. NLP, hypnosis, and identity-level transformation.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-card__num">02</div>
+          <h3>Body &amp; Biology</h3>
+          <p>Optimize energy, longevity, and physical vitality. Peptide protocols, blood diagnostics, sleep, and elite-level physical performance.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-card__num">03</div>
+          <h3>Business &amp; Performance</h3>
+          <p>Sales psychology, leadership presence, decision-making from strength, and vision that pulls you forward.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-card__num">04</div>
+          <h3>Love &amp; Relationships</h3>
+          <p>Build the intimate, passionate, deeply connected relationship you actually want. Most high performers are 10 years behind here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transformation -->
+  <section class="section--alt">
+    <div class="container container--narrow reveal" style="text-align:center;">
+      <p class="eyebrow">The Transformation</p>
+      <h2>From Running Old Code to Operating at Peak.</h2>
+    </div>
+    <div class="container reveal">
+      <div class="transform-grid">
+        <div class="transform-col transform-col--before">
+          <h3>Before</h3>
+          <ul>
+            <li>Uncertain, doubtful, running on old code</li>
+            <li>Chasing status and significance</li>
+            <li>Low energy, depleted, unfit</li>
+            <li>Successful but empty inside</li>
+            <li>Disconnected from love and intimacy</li>
+            <li>Decisions made from stress and fear</li>
+          </ul>
+        </div>
+        <div class="transform-col transform-col--after">
+          <h3>After</h3>
+          <ul>
+            <li>Certain, courageous, operating from new architecture</li>
+            <li>Driven by purpose and meaning</li>
+            <li>High energy, optimized, physically alive</li>
+            <li>Successful AND fulfilled</li>
+            <li>In a passionate, deeply loving relationship</li>
+            <li>Leading from clarity, strength, and joy</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modules -->
+  <section>
+    <div class="container container--narrow reveal" style="text-align:center;">
+      <p class="eyebrow">The Curriculum</p>
+      <h2>Six Modules. One New Operating System.</h2>
+    </div>
+    <div class="container container--narrow reveal">
+      <div class="module-list">
+        <div class="module">
+          <div class="module__num">01</div>
+          <div>
+            <h3>Identity Architecture</h3>
+            <p>Uncover the limiting beliefs and patterns running your life. Install a new identity built for who you&rsquo;re becoming.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module__num">02</div>
+          <div>
+            <h3>Energy &amp; Physical Optimization</h3>
+            <p>Build your biological foundation. Morning rituals, physical performance, sleep, recovery, and clinical longevity protocols.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module__num">03</div>
+          <div>
+            <h3>Peak Performance &amp; Business Clarity</h3>
+            <p>Sales psychology and influence frameworks used by Tony Robbins&rsquo; top performers.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module__num">04</div>
+          <div>
+            <h3>Masculine Leadership &amp; Purpose</h3>
+            <p>Lead from wholeness, not wounds. Identify your core mission beyond money.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module__num">05</div>
+          <div>
+            <h3>Love, Intimacy &amp; Relationships</h3>
+            <p>Attachment patterns, masculine polarity, vulnerability, and building the relationship you actually want.</p>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module__num">06</div>
+          <div>
+            <h3>Integration &amp; Peak Human Identity</h3>
+            <p>Lock in the new operating system. Full before-and-after audit and long-game longevity plan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="section--alt">
+    <div class="container container--narrow reveal" style="text-align:center;">
+      <p class="eyebrow">Results</p>
+      <h2>What Happens When the Inner Architecture Changes.</h2>
+    </div>
+    <div class="container reveal">
+      <div class="grid-2">
+        <div class="result-card">
+          <div class="result-card__name">Kyle</div>
+          <div class="result-card__role">Entrepreneur</div>
+          <p class="result-card__headline">$0 to $1M+ per month in revenue.</p>
+          <p>Came in stuck and self-sabotaging. We rewired his identity and his relationship with certainty. The business result followed the inner result.</p>
+        </div>
+        <div class="result-card">
+          <div class="result-card__name">Joe</div>
+          <div class="result-card__role">Founder</div>
+          <p class="result-card__headline">Found the love of his life and is getting married.</p>
+          <p>Came to me for business coaching. When you become a different man inside, your external world reorganizes around it.</p>
+        </div>
+        <div class="result-card">
+          <div class="result-card__name">Jack</div>
+          <div class="result-card__role">Executive Turned Entrepreneur</div>
+          <p class="result-card__headline">Left his high-paying job and built his own company.</p>
+          <p>We dismantled the fear architecture and rebuilt his identity as a founder.</p>
+        </div>
+        <div class="result-card">
+          <div class="result-card__name">Dennis</div>
+          <div class="result-card__role">Post-Exit Founder</div>
+          <p class="result-card__headline">Rebuilt his identity from unconditional self-worth.</p>
+          <p>Sold his company and felt completely purposeless. Building again, but this time from joy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <div class="container container--narrow reveal" style="text-align:center;">
+      <p class="eyebrow">Investment</p>
+      <h2>Two Ways In.</h2>
+    </div>
+    <div class="container reveal">
+      <div class="pricing-grid">
+
+        <div class="price-card">
+          <h3>Core</h3>
+          <div class="price-card__price">$10,000</div>
+          <div class="price-card__terms">or 3 payments of $3,500</div>
+          <ul class="price-card__features">
+            <li>6 self-paced video modules</li>
+            <li>Weekly live group coaching with Naeem</li>
+            <li>NLP &amp; hypnosis audio protocols</li>
+            <li>Private community of high-performing men</li>
+            <li>Quarterly in-person immersive experience</li>
+            <li>Full curriculum workbooks and implementation guides</li>
+          </ul>
+          <div class="price-card__cta">
+            <a class="btn btn--primary" href="[STRIPE_LINK_CORE]" target="_blank" rel="noopener">Apply for Core</a>
+          </div>
+        </div>
+
+        <div class="price-card price-card--elite">
+          <span class="price-card__badge">Elite</span>
+          <h3>Elite</h3>
+          <div class="price-card__price">$25,000</div>
+          <div class="price-card__terms">or 3 payments of $9,000</div>
+          <ul class="price-card__features">
+            <li>Everything in Core</li>
+            <li>Onboarding blood diagnostics &amp; full lab panel</li>
+            <li>Personalized peptide protocol via Frame Longevity</li>
+            <li>Clinical longevity optimization with PhD-level support</li>
+            <li>Monthly private 1:1 session with Naeem</li>
+            <li>Annual immersive private retreat</li>
+          </ul>
+          <div class="price-card__cta">
+            <a class="btn btn--primary" href="[STRIPE_LINK_ELITE]" target="_blank" rel="noopener">Apply for Elite</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section--alt">
+    <div class="container container--narrow reveal" style="text-align:center;">
+      <p class="eyebrow">About Naeem</p>
+      <h2>The Man Behind Peak Human OS.</h2>
+    </div>
+    <div class="container reveal">
+      <div class="about-grid">
+        <div class="headshot-placeholder">Replace with your photo here</div>
+        <div>
+          <p>I grew up chasing the status game: Wall Street, Silicon Valley, the right title, the right path. I was successful by every external measure and completely empty inside. I slept on a couch in a co-working space after quitting my Wall Street job. I lived in a one-room apartment in Puerto Rico after a breakup. Every time I hit rock bottom, I chose it, because I refused to stay on the wrong path.</p>
+          <p>That path led me to Tony Robbins, to NLP mastery, to coaching thousands of people, and to building a life I actually feel. I created Peak Human OS because this work saved my life, and I&rsquo;ve watched it transform everyone I&rsquo;ve taken through it.</p>
+          <ul class="credentials">
+            <li>Former Tony Robbins national speaker &amp; top salesperson. 1,000+ talks, 50,000+ lives impacted</li>
+            <li>NLP &amp; Hypnosis Trainer (highest certification level)</li>
+            <li>Built Performance Coach University with Jairek Robbins</li>
+            <li>Wall Street fund of hedge funds. Silicon Valley venture capital</li>
+            <li>Host, Peak Humans podcast</li>
+            <li>Co-founder, Frame Longevity clinical network</li>
+            <li>Splits time between Los Angeles, Medell&iacute;n, and Puerto Rico</li>
+          </ul>
+        </div>
+      </div>
+      <p class="pull-quote">&ldquo;The most powerful agent to develop right now isn&rsquo;t an AI agent. It&rsquo;s you.&rdquo;<span>Naeem Mahmood</span></p>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section>
+    <div class="container container--narrow reveal final-cta">
+      <h2>The Most Important Upgrade You&rsquo;ll Ever Make.</h2>
+      <p>The world is changing faster than ever. The men who will lead it aren&rsquo;t the ones with the best tools, they&rsquo;re the ones with the best inner architecture. This is how you build it.</p>
+      <div class="cta-row">
+        <a class="btn btn--primary" href="#pricing">Apply for Peak Human OS</a>
+        <a class="btn btn--ghost" href="[CALENDLY_URL]" target="_blank" rel="noopener">Book a Diagnostic Call</a>
+      </div>
+      <p class="instagram-cta">DM <a href="https://instagram.com/naeemmahmood" target="_blank" rel="noopener">@naeemmahmood</a> the word <strong>PEAK</strong> to start a conversation.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>&copy; 2026 Mood Ventures LLC &middot; Naeem Mahmood | Host of the Peak Humans podcast</p>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered fade-ins
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function (el) { observer.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  // OS terminal boot animation
+  (function () {
+    var lines = [
+      '> INITIALIZING PEAK_HUMAN_OS...',
+      '> LOCATING LEGACY IDENTITY FILES...',
+      '> [FOUND] limiting_beliefs.sys',
+      '> [FOUND] stress_response.sys',
+      '> REWRITING IDENTITY ARCHITECTURE...',
+      '> OPTIMIZING BIOLOGY...',
+      '> INSTALLING PURPOSE.exe',
+      '> SYSTEM UPDATE COMPLETE.'
+    ];
+    var body = document.getElementById('terminal-body');
+    if (!body) return;
+    var i = 0;
+    function nextLine() {
+      if (i >= lines.length) {
+        var cursor = document.createElement('span');
+        cursor.className = 'terminal__cursor';
+        body.appendChild(cursor);
+        return;
+      }
+      var el = document.createElement('p');
+      el.className = 'terminal__line';
+      el.textContent = lines[i];
+      body.appendChild(el);
+      requestAnimationFrame(function () { el.classList.add('is-visible'); });
+      i++;
+      setTimeout(nextLine, 450);
+    }
+    var termObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          nextLine();
+          termObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    termObserver.observe(document.getElementById('terminal'));
+  })();
+</script>
+</body>
+</html>

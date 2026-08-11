@@ -12,3 +12,5 @@ Disallow: /research-overview-private
 Disallow: /research-overview-private.html
 Disallow: /research-products-private
 Disallow: /research-products-private.html
+Disallow: /peak-human-os-private
+Disallow: /peak-human-os-private.html
