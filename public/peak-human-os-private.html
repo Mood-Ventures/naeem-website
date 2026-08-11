@@ -182,26 +182,6 @@
   .result-card__headline { color: var(--text); font-weight: 600; margin-bottom: 0.75rem; }
   .result-card p:last-child { margin-bottom: 0; font-size: 0.95rem; }
 
-  /* Pricing */
-  .pricing-grid { display: grid; gap: 2rem; margin-top: 3rem; align-items: start; }
-  @media (min-width: 900px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
-  .price-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 2.75rem 2.25rem; display: flex; flex-direction: column; position: relative; }
-  .price-card--elite { border-color: var(--gold); background: linear-gradient(160deg, rgba(200,162,76,0.08), var(--bg-card)); }
-  .price-card__badge {
-    position: absolute; top: -0.9rem; left: 50%; transform: translateX(-50%);
-    background: var(--gold); color: #171307; font-size: 0.75rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.08em; padding: 0.35rem 1rem; border-radius: 999px;
-  }
-  .price-card h3 { text-align: center; margin-bottom: 0.5rem; }
-  .price-card__price { text-align: center; font-family: var(--font-serif); font-size: 2.5rem; color: var(--gold); margin-bottom: 0.25rem; }
-  .price-card__terms { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
-  .price-card__features { list-style: none; margin: 0 0 2rem; padding: 0; flex: 1; }
-  .price-card__features li { padding: 0.65rem 0; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.95rem; padding-left: 1.5rem; position: relative; }
-  .price-card__features li:last-child { border-bottom: none; }
-  .price-card__features li::before { content: '\2713'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
-  .price-card__cta { text-align: center; }
-  .price-card__cta .btn { width: 100%; }
-
   /* About */
   .about-grid { display: grid; gap: 3rem; margin-top: 2.5rem; align-items: start; }
   @media (min-width: 800px) { .about-grid { grid-template-columns: 280px 1fr; } }
@@ -251,7 +231,7 @@
 <nav class="nav">
   <div class="container nav__inner">
     <a class="nav__logo" href="#main">Peak Human <span>OS</span></a>
-    <a class="btn btn--primary" href="#pricing">Apply Now</a>
+    <a class="btn btn--primary" href="[CALENDLY_URL]" target="_blank" rel="noopener">Apply Now</a>
   </div>
 </nav>
 
@@ -264,7 +244,7 @@
       <h1>Rewire Your Inner Architecture. Perform at Your Peak. Live a Life You Actually Feel.</h1>
       <p class="hero__subtitle">I help high-achieving men who have everything but feel nothing rewire their identity, optimize their biology, and build a life full of energy, love, and meaning.</p>
       <div class="cta-row">
-        <a class="btn btn--primary" href="#pricing">Apply for Peak Human OS</a>
+        <a class="btn btn--primary" href="[CALENDLY_URL]" target="_blank" rel="noopener">Apply for Peak Human OS</a>
         <a class="btn btn--ghost" href="[CALENDLY_URL]" target="_blank" rel="noopener">Book a Diagnostic Call</a>
       </div>
       <div class="terminal" id="terminal">
@@ -448,54 +428,6 @@
     </div>
   </section>
 
-  <!-- Pricing -->
-  <section id="pricing">
-    <div class="container container--narrow reveal" style="text-align:center;">
-      <p class="eyebrow">Investment</p>
-      <h2>Two Ways In.</h2>
-    </div>
-    <div class="container reveal">
-      <div class="pricing-grid">
-
-        <div class="price-card">
-          <h3>Core</h3>
-          <div class="price-card__price">$10,000</div>
-          <div class="price-card__terms">or 3 payments of $3,500</div>
-          <ul class="price-card__features">
-            <li>6 self-paced video modules</li>
-            <li>Weekly live group coaching with Naeem</li>
-            <li>NLP &amp; hypnosis audio protocols</li>
-            <li>Private community of high-performing men</li>
-            <li>Quarterly in-person immersive experience</li>
-            <li>Full curriculum workbooks and implementation guides</li>
-          </ul>
-          <div class="price-card__cta">
-            <a class="btn btn--primary" href="[STRIPE_LINK_CORE]" target="_blank" rel="noopener">Apply for Core</a>
-          </div>
-        </div>
-
-        <div class="price-card price-card--elite">
-          <span class="price-card__badge">Elite</span>
-          <h3>Elite</h3>
-          <div class="price-card__price">$25,000</div>
-          <div class="price-card__terms">or 3 payments of $9,000</div>
-          <ul class="price-card__features">
-            <li>Everything in Core</li>
-            <li>Onboarding blood diagnostics &amp; full lab panel</li>
-            <li>Personalized peptide protocol via Frame Longevity</li>
-            <li>Clinical longevity optimization with PhD-level support</li>
-            <li>Monthly private 1:1 session with Naeem</li>
-            <li>Annual immersive private retreat</li>
-          </ul>
-          <div class="price-card__cta">
-            <a class="btn btn--primary" href="[STRIPE_LINK_ELITE]" target="_blank" rel="noopener">Apply for Elite</a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
   <!-- About -->
   <section class="section--alt">
     <div class="container container--narrow reveal" style="text-align:center;">
@@ -529,7 +461,7 @@
       <h2>The Most Important Upgrade You&rsquo;ll Ever Make.</h2>
       <p>The world is changing faster than ever. The men who will lead it aren&rsquo;t the ones with the best tools, they&rsquo;re the ones with the best inner architecture. This is how you build it.</p>
       <div class="cta-row">
-        <a class="btn btn--primary" href="#pricing">Apply for Peak Human OS</a>
+        <a class="btn btn--primary" href="[CALENDLY_URL]" target="_blank" rel="noopener">Apply for Peak Human OS</a>
         <a class="btn btn--ghost" href="[CALENDLY_URL]" target="_blank" rel="noopener">Book a Diagnostic Call</a>
       </div>
       <p class="instagram-cta">DM <a href="https://instagram.com/naeemmahmood" target="_blank" rel="noopener">@naeemmahmood</a> the word <strong>PEAK</strong> to start a conversation.</p>
