@@ -286,7 +286,7 @@ function pageShell(inner, title, description) {
 
 <nav class="nav">
   <div class="container nav__inner">
-    <a class="nav__logo" href="/">SuperMood</a>
+    <a class="nav__logo" href="/">Super<span>Mood</span></a>
     <div class="nav__links">
       <a class="nav__link" href="/work-with-me">Work With Me</a>
       <a class="nav__link" href="/supermood-longevity">Longevity</a>

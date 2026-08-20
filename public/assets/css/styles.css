@@ -106,13 +106,15 @@ section { padding: 5rem 0; }
   padding: 1.1rem 0;
 }
 .nav__logo {
-  font-family: var(--font-serif);
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-weight: 800;
   font-size: 1.35rem;
   color: var(--color-white);
   text-decoration: none;
-  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
 }
+.nav__logo span { color: var(--color-accent); }
 .nav__links {
   display: none;
   align-items: center;
