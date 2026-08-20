@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS posts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  body_html TEXT NOT NULL,
+  published_at TEXT NOT NULL DEFAULT (datetime('now'))
+);

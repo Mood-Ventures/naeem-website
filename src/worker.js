@@ -1,5 +1,7 @@
-// Serves /blog by rendering the Peak Humans Substack RSS feed in the
-// site's design; every other request falls through to static assets.
+// Serves /blog with native posts stored in D1 (falling back to the Peak
+// Humans Substack RSS feed when no native posts exist yet), and a
+// password-protected /admin/new page for publishing new posts without
+// touching code. Every other request falls through to static assets.
 
 const FEED_URL = 'https://nmood.substack.com/feed';
 const FEED_CACHE_SECONDS = 600;
@@ -8,14 +10,172 @@ const MAX_POSTS = 20;
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname === '/blog' || url.pathname === '/blog/' || url.pathname === '/blog.html') {
-      return renderBlog();
+    const path = url.pathname;
+
+    if (path === '/blog' || path === '/blog/' || path === '/blog.html') {
+      return renderBlog(env);
     }
+
+    if (path === '/admin/new' || path === '/admin/new/') {
+      const authResponse = requireAuth(request, env);
+      if (authResponse) return authResponse;
+      if (request.method === 'POST') return handleCreatePost(request, env);
+      return renderAdminForm();
+    }
+
+    const postMatch = path.match(/^\/blog\/([a-z0-9-]+)\/?$/);
+    if (postMatch) {
+      return renderPost(env, postMatch[1]);
+    }
+
     return env.ASSETS.fetch(request);
   },
 };
 
-async function renderBlog() {
+// ---- Auth ----
+
+function requireAuth(request, env) {
+  const header = request.headers.get('Authorization') || '';
+  const expected = 'Basic ' + btoa(`${env.ADMIN_USER}:${env.ADMIN_PASSWORD}`);
+  if (header === expected) return null;
+  return new Response('Authentication required.', {
+    status: 401,
+    headers: { 'WWW-Authenticate': 'Basic realm="SuperMood Admin"' },
+  });
+}
+
+// ---- Post creation ----
+
+async function handleCreatePost(request, env) {
+  const form = await request.formData();
+  const title = (form.get('title') || '').toString().trim();
+  const bodyHtml = sanitizeHtml((form.get('body_html') || '').toString().trim());
+
+  if (!title || !bodyHtml) {
+    return renderAdminForm('Title and body are both required.');
+  }
+
+  const slug = await uniqueSlug(env, slugify(title));
+
+  await env.BLOG_DB.prepare(
+    'INSERT INTO posts (slug, title, body_html) VALUES (?, ?, ?)'
+  ).bind(slug, title, bodyHtml).run();
+
+  return new Response(null, { status: 302, headers: { Location: `/blog/${slug}` } });
+}
+
+function slugify(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 80)
+    .replace(/-+$/, '') || 'post';
+}
+
+async function uniqueSlug(env, base) {
+  let slug = base;
+  let n = 2;
+  while (true) {
+    const existing = await env.BLOG_DB.prepare('SELECT 1 FROM posts WHERE slug = ?').bind(slug).first();
+    if (!existing) return slug;
+    slug = `${base}-${n}`;
+    n++;
+  }
+}
+
+// Allowlist-based sanitizer. The admin form is password-gated (single
+// trusted assistant), so this is defense in depth, not a public-input
+// sanitizer: it strips scripts/handlers/dangerous URLs but otherwise
+// preserves the pasted formatting.
+function sanitizeHtml(html) {
+  return html
+    .replace(/<(script|style|iframe|object|embed|form|input|button|link|meta)[^>]*>[\s\S]*?<\/\1>/gi, '')
+    .replace(/<(script|style|iframe|object|embed|form|input|button|link|meta)[^>]*\/?>/gi, '')
+    .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
+    .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
+    .replace(/\s(href|src)\s*=\s*"\s*javascript:[^"]*"/gi, '')
+    .replace(/\s(href|src)\s*=\s*'\s*javascript:[^']*'/gi, '');
+}
+
+// ---- Rendering ----
+
+async function renderBlog(env) {
+  const { results } = await env.BLOG_DB
+    .prepare('SELECT slug, title, body_html, published_at FROM posts ORDER BY published_at DESC LIMIT 50')
+    .all();
+
+  if (results && results.length > 0) {
+    const body = `<div class="blog-list">${results.map(nativePostCard).join('\n')}</div>`;
+    return new Response(pageShell(body, 'The Blog', 'Essays on the work underneath the work.'), {
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
+  }
+
+  return renderSubstackBlog();
+}
+
+function nativePostCard(post) {
+  const excerpt = post.body_html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 180);
+  return `<article class="post-card">
+    <a class="post-card__link" href="/blog/${escapeHtml(post.slug)}">
+      <h3>${escapeHtml(post.title)}</h3>
+      <p class="post-card__date">${escapeHtml(formatDate(post.published_at))}</p>
+      <p class="post-card__excerpt">${escapeHtml(excerpt)}&hellip;</p>
+      <span class="post-card__cta">Read more &rarr;</span>
+    </a>
+  </article>`;
+}
+
+async function renderPost(env, slug) {
+  const post = await env.BLOG_DB
+    .prepare('SELECT title, body_html, published_at FROM posts WHERE slug = ?')
+    .bind(slug)
+    .first();
+
+  if (!post) {
+    return new Response(pageShell('<p style="text-align:center;">That post doesn&rsquo;t exist.</p>', 'Not Found', ''), {
+      status: 404,
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
+  }
+
+  const body = `
+    <p class="post-meta">${escapeHtml(formatDate(post.published_at))}</p>
+    <div class="post-body">${post.body_html}</div>
+    <a class="post-back" href="/blog">&larr; Back to the blog</a>
+  `;
+  return new Response(pageShell(body, post.title, ''), {
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  });
+}
+
+function renderAdminForm(error) {
+  const body = `
+    <h2>New Post</h2>
+    ${error ? `<p style="color:#ff6b6b; text-align:center;">${escapeHtml(error)}</p>` : ''}
+    <form class="admin-form" method="POST" action="/admin/new" onsubmit="document.getElementById('body_html').value = document.getElementById('editor').innerHTML;">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" required>
+
+      <label for="editor">Body</label>
+      <div id="editor" class="admin-editor" contenteditable="true"></div>
+      <p class="admin-hint">Paste your newsletter directly into the box above &mdash; formatting like bold, links, and paragraphs will carry over.</p>
+      <input type="hidden" id="body_html" name="body_html">
+
+      <div class="cta-row">
+        <button type="submit" class="btn btn--primary">Publish</button>
+      </div>
+    </form>
+  `;
+  return new Response(pageShell(body, 'New Post', ''), {
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  });
+}
+
+async function renderSubstackBlog() {
   let posts = [];
   let feedError = false;
   try {
@@ -30,9 +190,9 @@ async function renderBlog() {
 
   const body = feedError || posts.length === 0
     ? `<p class="blog-empty">New essays are on the way. In the meantime, <a href="https://nmood.substack.com" target="_blank" rel="noopener">visit the Peak Humans Substack</a>.</p>`
-    : `<div class="blog-list">${posts.map(postCard).join('\n')}</div>`;
+    : `<div class="blog-list">${posts.map(substackPostCard).join('\n')}</div>`;
 
-  return new Response(pageShell(body), {
+  return new Response(pageShell(body, 'The Blog', 'Essays on the work underneath the work.'), {
     headers: {
       'content-type': 'text/html; charset=utf-8',
       'cache-control': `public, max-age=${FEED_CACHE_SECONDS}`,
@@ -49,7 +209,7 @@ function parseFeed(xml) {
     const description = extract(item, 'description');
     const pubDate = extract(item, 'pubDate');
     if (!title || !link) continue;
-    posts.push({ title, link, description, date: formatDate(pubDate) });
+    posts.push({ title, link, description, date: formatRssDate(pubDate) });
   }
   return posts;
 }
@@ -71,8 +231,14 @@ function decodeEntities(s) {
     .replace(/&amp;/g, '&');
 }
 
-function formatDate(pubDate) {
+function formatRssDate(pubDate) {
   const d = new Date(pubDate);
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatDate(isoDate) {
+  const d = new Date(isoDate.replace(' ', 'T') + 'Z');
   if (isNaN(d)) return '';
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
@@ -81,7 +247,7 @@ function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function postCard(post) {
+function substackPostCard(post) {
   return `<article class="post-card">
     <a class="post-card__link" href="${escapeHtml(post.link)}" target="_blank" rel="noopener">
       <h3>${escapeHtml(post.title)}</h3>
@@ -92,7 +258,10 @@ function postCard(post) {
   </article>`;
 }
 
-function pageShell(inner) {
+function pageShell(inner, title, description) {
+  const pageTitle = title === 'The Blog' ? 'SuperMood | Naeem Mahmood &mdash; Executive Coach for Founders' : `${escapeHtml(title)} | SuperMood`;
+  const heroTitle = title || 'The Blog';
+  const heroSubtitle = description || '';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,7 +271,7 @@ function pageShell(inner) {
 <!-- End Meta Pixel Code -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SuperMood | Naeem Mahmood &mdash; Executive Coach for Founders</title>
+<title>${pageTitle}</title>
 <meta name="description" content="Executive coaching for founders who are winning on paper and losing everywhere that matters. Peak Mind. Peak Body. Peak Love.">
 <meta name="author" content="Naeem Mahmood">
 <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
@@ -148,17 +317,14 @@ function pageShell(inner) {
 
   <section class="hero">
     <div class="container hero__inner reveal">
-      <h1>The Blog</h1>
-      <p class="hero__subtitle">Essays on the work underneath the work &mdash; from the Peak Humans Substack.</p>
+      <h1>${escapeHtml(heroTitle)}</h1>
+      ${heroSubtitle ? `<p class="hero__subtitle">${escapeHtml(heroSubtitle)}</p>` : ''}
     </div>
   </section>
 
   <section class="section--alt">
     <div class="container container--narrow reveal">
       ${inner}
-      <div class="cta-row">
-        <a class="btn btn--primary" href="https://nmood.substack.com/subscribe" target="_blank" rel="noopener">Subscribe on Substack &rarr;</a>
-      </div>
     </div>
   </section>
 

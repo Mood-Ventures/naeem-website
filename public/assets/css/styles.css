@@ -336,6 +336,55 @@ section { padding: 5rem 0; }
 .blog-empty { text-align: center; color: var(--color-text-muted); }
 .blog-empty a { color: var(--color-accent); }
 
+.post-meta {
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.post-body { color: var(--color-text); }
+.post-body a { color: var(--color-accent); }
+.post-body ul, .post-body ol { margin: 0 0 1rem; padding-left: 1.5rem; }
+.post-body li { margin-bottom: 0.4rem; }
+.post-body blockquote {
+  border-left: 2px solid var(--color-accent);
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+.post-body img { border-radius: 8px; margin: 1.5rem 0; }
+.post-back { display: block; text-align: center; margin-top: 3rem; color: var(--color-accent); text-decoration: none; font-weight: 600; }
+
+/* Admin publish form */
+.admin-form label { display: block; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+.admin-form input[type="text"] {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+}
+.admin-form input[type="text"]:focus { outline: none; border-color: var(--color-accent); }
+.admin-editor {
+  min-height: 320px;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.admin-editor:focus { outline: none; border-color: var(--color-accent); }
+.admin-hint { color: var(--color-text-muted); font-size: 0.85rem; margin-top: 0.5rem; }
+
 /* Listen buttons (Podcast page) */
 .listen-row {
   display: flex;

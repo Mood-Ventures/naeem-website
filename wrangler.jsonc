@@ -7,5 +7,12 @@
     "directory": "public",
     "binding": "ASSETS",
     "not_found_handling": "404-page"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "BLOG_DB",
+      "database_name": "supermood-blog",
+      "database_id": "c6e9e12a-6681-45d1-af84-2ef6cf62c927"
+    }
+  ]
 }
