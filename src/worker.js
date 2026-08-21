@@ -162,7 +162,7 @@ function renderAdminForm(error) {
 
       <label for="editor">Body</label>
       <div id="editor" class="admin-editor" contenteditable="true"></div>
-      <p class="admin-hint">Paste your newsletter directly into the box above &mdash; formatting like bold, links, and paragraphs will carry over.</p>
+      <p class="admin-hint">Paste your newsletter directly into the box above. Formatting like bold, links, and paragraphs will carry over.</p>
       <input type="hidden" id="body_html" name="body_html">
 
       <div class="cta-row">
@@ -267,7 +267,7 @@ function substackPostCard(post) {
 }
 
 function pageShell(inner, title, description) {
-  const pageTitle = title === 'The Blog' ? 'SuperMood | Naeem Mahmood &mdash; Executive Coach for Founders' : `${escapeHtml(title)} | SuperMood`;
+  const pageTitle = title === 'The Blog' ? 'SuperMood | Naeem Mahmood, Executive Coach for Founders' : `${escapeHtml(title)} | SuperMood`;
   const heroTitle = title || 'The Blog';
   const heroSubtitle = description || '';
   return `<!DOCTYPE html>
