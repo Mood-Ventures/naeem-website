@@ -17,40 +17,40 @@ One slot, larger visual treatment, placed right after "This isn't a performance 
 
 ## Peak Human Protocol Page — Real Results (6 slots)
 
-Coaching client results. Grid of 6, 2-3 per row on desktop.
+Coaching client results. Grid of 6, 2-3 per row on desktop. Videos are live; name/title/quote still needed for each (currently showing as video-only cards with no caption).
 
 ### Slot 1
-- **Video Embed URL:**
+- **Video Embed URL:** https://youtu.be/JexrYP4bmI4 (live)
 - **Name (first name + last initial):**
 - **Title (e.g. "Founder, [industry]" or "Peak Human Protocol Client"):**
 - **Pull Quote:**
 
 ### Slot 2
-- **Video Embed URL:**
+- **Video Embed URL:** https://youtu.be/cI7zil-76wE (live)
 - **Name:**
 - **Title:**
 - **Pull Quote:**
 
 ### Slot 3
-- **Video Embed URL:**
+- **Video Embed URL:** https://youtu.be/88CsecXRLzU (live)
 - **Name:**
 - **Title:**
 - **Pull Quote:**
 
 ### Slot 4
-- **Video Embed URL:**
+- **Video Embed URL:** https://youtube.com/shorts/OYDW32AUXYQ (live)
 - **Name:**
 - **Title:**
 - **Pull Quote:**
 
 ### Slot 5
-- **Video Embed URL:**
+- **Video Embed URL:** https://youtube.com/shorts/ACaFIcPB1Us (live)
 - **Name:**
 - **Title:**
 - **Pull Quote:**
 
 ### Slot 6
-- **Video Embed URL:**
+- **Video Embed URL:** https://youtube.com/shorts/PqxpJ8Gejcc (live)
 - **Name:**
 - **Title:**
 - **Pull Quote:**

@@ -425,6 +425,8 @@ section { padding: 5rem 0; }
 @media (min-width: 1100px) {
   .testimonial-grid { grid-template-columns: repeat(3, 1fr); }
 }
+.testimonial-card .video-embed { margin-top: 0; border-radius: 12px; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.testimonial-card:hover .video-embed { border-color: var(--color-accent); box-shadow: 0 0 24px rgba(0, 240, 255, 0.2); }
 .testimonial-card__video {
   aspect-ratio: 16 / 9;
   border-radius: 12px;
