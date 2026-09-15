@@ -455,6 +455,7 @@ section { padding: 5rem 0; }
 
 .testimonial-featured { max-width: 720px; margin: 3rem auto 0; text-align: center; }
 .testimonial-featured .testimonial-card__video { aspect-ratio: 16 / 9; }
+.testimonial-featured .video-embed { margin-top: 0; }
 .testimonial-featured .testimonial-card__quote { font-size: 1.3rem; }
 
 /* Footer newsletter placeholder */

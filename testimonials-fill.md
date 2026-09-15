@@ -4,14 +4,14 @@ Fill in each slot below, then send back so the placeholders on the live site can
 
 ---
 
-## Homepage — Featured Testimonial
+## Homepage — Featured Testimonial ✅ FILLED
 
 One slot, larger visual treatment, placed right after "This isn't a performance problem" on the homepage.
 
-- **Video Embed URL:**
-- **Name:**
-- **Title:**
-- **Pull Quote:**
+- **Video Embed URL:** https://youtu.be/FgQhCLDZdGI (live)
+- **Name:** Kyle Armour
+- **Title:** Founder, Formulation Factory
+- **Pull Quote:** "I've had several coaches in my life. Working with Naeem has been by far the best, hence why we're still working together."
 
 ---
 
