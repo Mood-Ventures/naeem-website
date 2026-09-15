@@ -7,10 +7,22 @@ const FEED_URL = 'https://nmood.substack.com/feed';
 const FEED_CACHE_SECONDS = 600;
 const MAX_POSTS = 20;
 
+// Retired URLs that now fold into the Peak Human Protocol master page.
+const RETIRED_TO_PROTOCOL = [
+  '/mood-method', '/mood-method.html',
+  '/supermood', '/supermood.html',
+  '/supermood-standard', '/supermood-standard.html',
+  '/work-with-me', '/work-with-me.html',
+];
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
+
+    if (RETIRED_TO_PROTOCOL.includes(path)) {
+      return Response.redirect(new URL('/peak-human-protocol', url.origin).toString(), 301);
+    }
 
     if (path === '/blog' || path === '/blog/' || path === '/blog.html') {
       return renderBlog(env);
@@ -40,7 +52,7 @@ function requireAuth(request, env) {
   if (header === expected) return null;
   return new Response('Authentication required.', {
     status: 401,
-    headers: { 'WWW-Authenticate': 'Basic realm="SuperMood Admin"' },
+    headers: { 'WWW-Authenticate': 'Basic realm="Naeem Mahmood Admin"' },
   });
 }
 
@@ -273,7 +285,7 @@ function substackPostCard(post) {
 }
 
 function pageShell(inner, title, description) {
-  const pageTitle = title === 'The Blog' ? 'SuperMood | Naeem Mahmood, Executive Coach for Founders' : `${escapeHtml(title)} | SuperMood`;
+  const pageTitle = title === 'The Blog' ? 'Naeem Mahmood — Peak Performance for Founders' : `${escapeHtml(title)} | Naeem Mahmood`;
   const heroTitle = title || 'The Blog';
   const heroSubtitle = description || '';
   return `<!DOCTYPE html>
@@ -302,56 +314,24 @@ function pageShell(inner, title, description) {
   <div class="container nav__inner">
     <a class="nav__logo" href="/">Naeem<span>Mahmood</span></a>
     <div class="nav__links">
-      <div class="nav__dropdown">
-        <button class="nav__dropdown-trigger" type="button">Work With Me</button>
-        <div class="nav__dropdown-menu">
-          <a href="/peak-human-protocol">Peak Human Protocol</a>
-          <a href="/peak-human-os">Peak Human OS <span class="nav__dropdown-tag">Coming Soon</span></a>
-        </div>
-      </div>
-      <a class="nav__link" href="/speaking">Speaking</a>
-      <div class="nav__dropdown">
-        <button class="nav__dropdown-trigger" type="button">About</button>
-        <div class="nav__dropdown-menu">
-          <a href="/about">About Naeem</a>
-          <a href="/mood-method">The Mood Method</a>
-        </div>
-      </div>
+      <a class="nav__link" href="/peak-human-protocol">Work With Me</a>
       <a class="nav__link" href="/podcast">Podcast</a>
+      <a class="nav__link" href="/about">About</a>
+      <a class="nav__link" href="/speaking">Speaking</a>
+      <a class="nav__link" href="/books">Books</a>
       <a class="nav__link" href="/blog">Blog</a>
-      <div class="nav__dropdown">
-        <button class="nav__dropdown-trigger" type="button">Programs</button>
-        <div class="nav__dropdown-menu">
-          <a href="/daily">SuperMood Daily</a>
-          <a href="/peak-life-os">Peak Life OS</a>
-          <a href="/supermood-longevity">Longevity</a>
-        </div>
-      </div>
-      <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply for a Breakthrough Call</a>
+      <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply</a>
     </div>
     <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
   </div>
   <div class="nav__mobile container">
-    <span class="nav__mobile-label">Work With Me</span>
-    <div class="nav__mobile-sub">
-      <a class="nav__link" href="/peak-human-protocol">Peak Human Protocol</a>
-      <a class="nav__link" href="/peak-human-os">Peak Human OS (Coming Soon)</a>
-    </div>
-    <a class="nav__link" href="/speaking">Speaking</a>
-    <span class="nav__mobile-label">About</span>
-    <div class="nav__mobile-sub">
-      <a class="nav__link" href="/about">About Naeem</a>
-      <a class="nav__link" href="/mood-method">The Mood Method</a>
-    </div>
+    <a class="nav__link" href="/peak-human-protocol">Work With Me</a>
     <a class="nav__link" href="/podcast">Podcast</a>
+    <a class="nav__link" href="/about">About</a>
+    <a class="nav__link" href="/speaking">Speaking</a>
+    <a class="nav__link" href="/books">Books</a>
     <a class="nav__link" href="/blog">Blog</a>
-    <span class="nav__mobile-label">Programs</span>
-    <div class="nav__mobile-sub">
-      <a class="nav__link" href="/daily">SuperMood Daily</a>
-      <a class="nav__link" href="/peak-life-os">Peak Life OS</a>
-      <a class="nav__link" href="/supermood-longevity">Longevity</a>
-    </div>
-    <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply for a Breakthrough Call</a>
+    <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply</a>
   </div>
 </nav>
 
@@ -375,24 +355,26 @@ function pageShell(inner, title, description) {
 <footer class="site-footer">
   <div class="container">
     <div class="site-footer__grid">
-      <span class="site-footer__copyright">SuperMood &copy; 2026</span>
+      <span class="site-footer__copyright">&copy; Mood Ventures LLC | 2026</span>
       <div class="site-footer__links">
-        <a href="/">Home</a>
-        <a href="/peak-human-protocol">Peak Human Protocol</a>
-        <a href="/peak-human-os">Peak Human OS</a>
-        <a href="/speaking">Speaking</a>
-        <a href="/about">About</a>
-        <a href="/mood-method">The Mood Method</a>
+        <a href="/peak-human-protocol">Work With Me</a>
         <a href="/podcast">Podcast</a>
+        <a href="/about">About</a>
+        <a href="/speaking">Speaking</a>
+        <a href="/books">Books</a>
         <a href="/blog">Blog</a>
-        <a href="/daily">SuperMood Daily</a>
-        <a href="/peak-life-os">Peak Life OS</a>
-        <a href="/supermood-longevity">Longevity</a>
       </div>
       <div class="site-footer__links">
-        <a href="/breakthrough-call">Apply for a Breakthrough Call</a>
+        <a href="/breakthrough-call">Apply</a>
       </div>
     </div>
+    <form class="footer-newsletter" onsubmit="return false;">
+      <label for="footer-email" class="footer-newsletter__label">Get occasional notes from Naeem. (Coming soon)</label>
+      <div class="footer-newsletter__row">
+        <input type="email" id="footer-email" placeholder="Your email" disabled>
+        <button type="submit" class="btn btn--ghost btn--small" disabled>Notify Me</button>
+      </div>
+    </form>
     <p class="site-footer__tagline">The operating system underneath everything.</p>
   </div>
 </footer>

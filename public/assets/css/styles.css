@@ -413,6 +413,75 @@ section { padding: 5rem 0; }
   color: var(--color-text-muted);
 }
 
+/* Testimonial video grid (coaching results, speaking reviews) */
+.testimonial-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+@media (min-width: 700px) {
+  .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1100px) {
+  .testimonial-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.testimonial-card__video {
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  border: 1px dashed var(--color-border);
+  background: var(--color-bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.testimonial-card:hover .testimonial-card__video {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.2);
+}
+.testimonial-card__quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--color-text);
+  margin: 1.25rem 0 0.75rem;
+}
+.testimonial-card__name { font-weight: 700; color: var(--color-white); }
+.testimonial-card__title { color: var(--color-text-muted); font-size: 0.85rem; display: block; margin-top: 0.15rem; }
+
+.testimonial-featured { max-width: 720px; margin: 3rem auto 0; text-align: center; }
+.testimonial-featured .testimonial-card__video { aspect-ratio: 16 / 9; }
+.testimonial-featured .testimonial-card__quote { font-size: 1.3rem; }
+
+/* Footer newsletter placeholder */
+.footer-newsletter { margin: 2rem 0; text-align: center; }
+.footer-newsletter__label {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+.footer-newsletter__row {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.footer-newsletter__row input {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.7rem 1.25rem;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  min-width: 220px;
+}
+.footer-newsletter__row input:disabled { opacity: 0.5; }
+
 /* Blog */
 .blog-list {
   display: flex;
