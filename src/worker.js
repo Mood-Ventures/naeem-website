@@ -118,9 +118,15 @@ async function renderBlog(env) {
 }
 
 function nativePostCard(post) {
-  const excerpt = decodeEntities(post.body_html.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim().slice(0, 180);
+  const imgMatch = post.body_html.match(/^\s*<img[^>]*\ssrc="([^"]+)"[^>]*>/i);
+  const thumb = imgMatch
+    ? `<div class="post-card__thumb"><img src="${escapeHtml(imgMatch[1])}" alt="" loading="lazy"></div>`
+    : '';
+  const textOnly = imgMatch ? post.body_html.slice(imgMatch[0].length) : post.body_html;
+  const excerpt = decodeEntities(textOnly.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim().slice(0, 180);
   return `<article class="post-card">
     <a class="post-card__link" href="/blog/${escapeHtml(post.slug)}">
+      ${thumb}
       <h3>${escapeHtml(post.title)}</h3>
       <p class="post-card__date">${escapeHtml(formatDate(post.published_at))}</p>
       <p class="post-card__excerpt">${escapeHtml(excerpt)}&hellip;</p>

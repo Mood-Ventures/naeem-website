@@ -432,6 +432,17 @@ section { padding: 5rem 0; }
   text-decoration: none;
   color: var(--color-text);
 }
+.post-card__thumb {
+  margin: -2rem -2rem 1.5rem;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+.post-card__thumb img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
 .post-card h3 { margin-bottom: 0.5rem; }
 .post-card__date {
   color: var(--color-accent);
