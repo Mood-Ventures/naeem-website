@@ -294,29 +294,57 @@ function pageShell(inner, title, description) {
 
 <nav class="nav">
   <div class="container nav__inner">
-    <a class="nav__logo" href="/">Super<span>Mood</span></a>
+    <a class="nav__logo" href="/">Naeem<span>Mahmood</span></a>
     <div class="nav__links">
-      <a class="nav__link" href="/work-with-me">Work With Me</a>
-      <a class="nav__link" href="/supermood-longevity">Longevity</a>
+      <div class="nav__dropdown">
+        <button class="nav__dropdown-trigger" type="button">Work With Me</button>
+        <div class="nav__dropdown-menu">
+          <a href="/peak-human-protocol">Peak Human Protocol</a>
+          <a href="/peak-human-os">Peak Human OS <span class="nav__dropdown-tag">Coming Soon</span></a>
+        </div>
+      </div>
       <a class="nav__link" href="/speaking">Speaking</a>
-      <a class="nav__link" href="/about">About</a>
+      <div class="nav__dropdown">
+        <button class="nav__dropdown-trigger" type="button">About</button>
+        <div class="nav__dropdown-menu">
+          <a href="/about">About Naeem</a>
+          <a href="/mood-method">The Mood Method</a>
+        </div>
+      </div>
       <a class="nav__link" href="/podcast">Podcast</a>
       <a class="nav__link" href="/blog">Blog</a>
-      <a class="nav__link" href="/peak-life-os">Peak Life OS</a>
-      <a class="nav__link" href="/daily">Daily</a>
+      <div class="nav__dropdown">
+        <button class="nav__dropdown-trigger" type="button">Programs</button>
+        <div class="nav__dropdown-menu">
+          <a href="/daily">SuperMood Daily</a>
+          <a href="/peak-life-os">Peak Life OS</a>
+          <a href="/supermood-longevity">Longevity</a>
+        </div>
+      </div>
       <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply for a Breakthrough Call</a>
     </div>
     <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
   </div>
   <div class="nav__mobile container">
-    <a class="nav__link" href="/work-with-me">Work With Me</a>
-    <a class="nav__link" href="/supermood-longevity">Longevity</a>
+    <span class="nav__mobile-label">Work With Me</span>
+    <div class="nav__mobile-sub">
+      <a class="nav__link" href="/peak-human-protocol">Peak Human Protocol</a>
+      <a class="nav__link" href="/peak-human-os">Peak Human OS (Coming Soon)</a>
+    </div>
     <a class="nav__link" href="/speaking">Speaking</a>
-    <a class="nav__link" href="/about">About</a>
+    <span class="nav__mobile-label">About</span>
+    <div class="nav__mobile-sub">
+      <a class="nav__link" href="/about">About Naeem</a>
+      <a class="nav__link" href="/mood-method">The Mood Method</a>
+    </div>
     <a class="nav__link" href="/podcast">Podcast</a>
     <a class="nav__link" href="/blog">Blog</a>
-    <a class="nav__link" href="/peak-life-os">Peak Life OS</a>
-    <a class="nav__link" href="/daily">Daily</a>
+    <span class="nav__mobile-label">Programs</span>
+    <div class="nav__mobile-sub">
+      <a class="nav__link" href="/daily">SuperMood Daily</a>
+      <a class="nav__link" href="/peak-life-os">Peak Life OS</a>
+      <a class="nav__link" href="/supermood-longevity">Longevity</a>
+    </div>
     <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply for a Breakthrough Call</a>
   </div>
 </nav>
