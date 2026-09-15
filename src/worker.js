@@ -378,14 +378,16 @@ function pageShell(inner, title, description) {
       <span class="site-footer__copyright">SuperMood &copy; 2026</span>
       <div class="site-footer__links">
         <a href="/">Home</a>
-        <a href="/work-with-me">Work With Me</a>
-        <a href="/supermood-longevity">Longevity</a>
+        <a href="/peak-human-protocol">Peak Human Protocol</a>
+        <a href="/peak-human-os">Peak Human OS</a>
         <a href="/speaking">Speaking</a>
         <a href="/about">About</a>
+        <a href="/mood-method">The Mood Method</a>
         <a href="/podcast">Podcast</a>
         <a href="/blog">Blog</a>
+        <a href="/daily">SuperMood Daily</a>
         <a href="/peak-life-os">Peak Life OS</a>
-        <a href="/daily">Daily</a>
+        <a href="/supermood-longevity">Longevity</a>
       </div>
       <div class="site-footer__links">
         <a href="/breakthrough-call">Apply for a Breakthrough Call</a>
