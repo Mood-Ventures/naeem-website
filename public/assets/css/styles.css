@@ -610,6 +610,37 @@ section { padding: 5rem 0; }
 
 .section-divider { border-top: 1px solid var(--color-border); opacity: 0.5; }
 
+/* Before/After comparison */
+.compare-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+@media (min-width: 800px) {
+  .compare-grid { grid-template-columns: 1fr 1fr; }
+}
+.compare-col {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 2.25rem;
+}
+.compare-col--after {
+  border-color: var(--color-accent);
+  background: linear-gradient(160deg, rgba(0, 240, 255, 0.08), transparent);
+}
+.compare-col h3 { text-align: center; margin-bottom: 1.5rem; }
+.compare-col--before h3 { color: var(--color-text-muted); }
+.compare-col--after h3 { color: var(--color-accent); }
+.compare-col ul { list-style: none; margin: 0; padding: 0; }
+.compare-col li {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+.compare-col li:last-child { border-bottom: none; }
+
 /* Phases (Work With Me) */
 .phase {
   border-left: 2px solid var(--color-accent);
