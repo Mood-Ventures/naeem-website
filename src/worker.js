@@ -285,7 +285,7 @@ function substackPostCard(post) {
 }
 
 function pageShell(inner, title, description) {
-  const pageTitle = title === 'The Blog' ? 'Naeem Mahmood — Peak Performance for Founders' : `${escapeHtml(title)} | Naeem Mahmood`;
+  const pageTitle = title === 'The Blog' ? 'Naeem Mahmood — Peak Performance for High Achievers' : `${escapeHtml(title)} | Naeem Mahmood`;
   const heroTitle = title || 'The Blog';
   const heroSubtitle = description || '';
   return `<!DOCTYPE html>
@@ -298,7 +298,7 @@ function pageShell(inner, title, description) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${pageTitle}</title>
-<meta name="description" content="Executive coaching for founders who are winning on paper and losing everywhere that matters. Peak Mind. Peak Body. Peak Love.">
+<meta name="description" content="Executive coaching for high performers who are winning on paper and losing everywhere that matters. Peak Mind. Peak Body. Peak Love.">
 <meta name="author" content="Naeem Mahmood">
 <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
