@@ -460,6 +460,30 @@ section { padding: 5rem 0; }
 .testimonial-featured .video-embed { margin-top: 0; }
 .testimonial-featured .testimonial-card__quote { font-size: 1.3rem; }
 
+/* Footer contact info */
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 2rem 0 0;
+}
+.footer-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-white);
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.footer-contact a:hover { color: var(--color-accent); }
+.footer-contact__phone span {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.footer-contact svg { width: 1.15rem; height: 1.15rem; fill: currentColor; flex-shrink: 0; }
+
 /* Footer newsletter placeholder */
 .footer-newsletter { margin: 2rem 0; text-align: center; }
 .footer-newsletter__label {
