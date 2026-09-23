@@ -484,31 +484,6 @@ section { padding: 5rem 0; }
 }
 .footer-contact svg { width: 1.15rem; height: 1.15rem; fill: currentColor; flex-shrink: 0; }
 
-/* Footer newsletter placeholder */
-.footer-newsletter { margin: 2rem 0; text-align: center; }
-.footer-newsletter__label {
-  display: block;
-  color: var(--color-text-muted);
-  font-size: 0.85rem;
-  margin-bottom: 0.75rem;
-}
-.footer-newsletter__row {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.footer-newsletter__row input {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  padding: 0.7rem 1.25rem;
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  min-width: 220px;
-}
-.footer-newsletter__row input:disabled { opacity: 0.5; }
-
 /* Blog */
 .blog-list {
   display: flex;

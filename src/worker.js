@@ -372,13 +372,6 @@ function pageShell(inner, title, description) {
       <a class="footer-contact__phone" href="tel:+14154137426"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>415-413-7426</span></a>
       <a href="mailto:team@naeemmahmood.com">team@naeemmahmood.com</a>
     </div>
-    <form class="footer-newsletter" onsubmit="return false;">
-      <label for="footer-email" class="footer-newsletter__label">Get occasional notes from Naeem. (Coming soon)</label>
-      <div class="footer-newsletter__row">
-        <input type="email" id="footer-email" placeholder="Your email" disabled>
-        <button type="submit" class="btn btn--ghost btn--small" disabled>Notify Me</button>
-      </div>
-    </form>
     <p class="site-footer__tagline">The operating system underneath everything.</p>
   </div>
 </footer>
