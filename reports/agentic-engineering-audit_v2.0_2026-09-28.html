@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Engineering Audit</title>
+<style>
+:root{--bg:#fff;--fg:#1d2330;--mut:#5b6474;--line:#e3e6eb;--card:#f7f8fa;--pass:#1f7a3f;--part:#9a6700;--fail:#b42318;--unv:#5a4fcf;--na:#6b7280}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:1040px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:1.6rem;margin:.2em 0}h2{font-size:1.2rem;margin:2em 0 .6em;padding-bottom:.3em;border-bottom:1px solid var(--line)}h3{font-size:1rem;margin:1.2em 0 .4em}
+.mut{color:var(--mut)}code{font:13px/1.4 ui-monospace,Menlo,monospace;background:var(--card);padding:1px 4px;border-radius:4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.kpi b{display:block;font-size:1.5rem}.kpi span{color:var(--mut);font-size:.85rem}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}th{background:var(--card);font-weight:600}
+.s{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;padding:2px 7px;border-radius:999px;color:#fff;white-space:nowrap}
+.PASS{background:var(--pass)}.PARTIAL{background:var(--part)}.FAIL{background:var(--fail)}.UNVERIFIED{background:var(--unv)}.NA{background:var(--na)}
+.sev{font-weight:700}.HIGH{color:var(--fail)}.MED{color:var(--part)}.LOW{color:var(--na)}
+.f{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;break-inside:avoid}.f.h{border-left-color:var(--fail)}.f.m{border-left-color:var(--part)}.f.l{border-left-color:var(--na)}
+.f p{margin:.3em 0}
+pre{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto;font-size:12.5px}
+details{margin:6px 0}summary{cursor:pointer;font-weight:600}
+ol li,ul li{margin:.25em 0}
+@media print{body{font-size:11pt}details{display:block}details>*{display:block}summary{list-style:none}.kpi{border-color:#999}main{max-width:none;padding:0}a{color:inherit}}
+</style>
+</head>
+<body><main>
+
+<p class="mut">Agentic Engineering Audit · v2.0 · 2026-09-28</p>
+<h1>naeem-website: agentic environment audit</h1>
+
+<div class="kpis">
+ <div class="kpi"><span>Grade</span><b>F</b></div>
+ <div class="kpi"><span>Capability score</span><b>30 / 95</b><span>normalized 32 / 100 (H is N/A)</span></div>
+ <div class="kpi"><span>Verification coverage</span><b>≈13%</b><span>of applicable weight has runtime evidence from this audit</span></div>
+ <div class="kpi"><span>Operational verdict</span><b style="color:var(--fail)">HIGH-RISK</b></div>
+</div>
+
+<p><strong>Executive verdict.</strong> This is a single-operator setup: Claude Code (desktop app) with the Superpowers plugin, working on a static Cloudflare Workers site. It reliably does <em>interactive, human-supervised</em> site edits. The historical transcripts show the agent previewing and screenshotting changes before pushing. But it has no test or eval suite, no CI gate, no independent review, and no durable task state. A broad permission allowlist lets the agent push straight to <code>main</code>, which the README says deploys to production. A live Cloudflare API token is stored in plaintext in the local permission allowlist and in two session transcripts. The low raw score mostly reflects capabilities that don't exist here, not broken ones. The HIGH-RISK verdict comes from the secret exposure and the ungated path to production.</p>
+
+<h2>Scope, revision, environment, limitations</h2>
+<ul>
+ <li><b>Repo:</b> <code>/Users/naeem/naeem-website</code>, branch <code>main</code>, HEAD <code>878723c</code> (2026-09-23), working tree clean at start, 96 commits, remote <code>github.com/naeemsmood/naeem-website</code>.</li>
+ <li><b>Runtime:</b> macOS (Darwin 25.5.0), Claude Code desktop app (this session runs Opus 5.5), Node v24.12.0, Python 3.13.7, <code>gh</code> authenticated (keyring). <code>claude</code> CLI and <code>wrangler</code> are not on PATH. Wrangler runs only through <code>npx</code>, which downloads it on demand.</li>
+ <li><b>Plugins installed:</b> superpowers 5.1.0, frontend-design 1.0.0 (user scope).</li>
+ <li><b>Limitations:</b> No Cloudflare dashboard or API access was used, so Workers Builds, production secrets and D1 were not inspected. I didn't install wrangler, so there was no <code>wrangler dev</code> run. Live-site checks were unauthenticated GET status codes only. No synthetic facts were written to production memory.</li>
+ <li><b>Parallelism:</b> Audit lanes were <em>not</em> run as parallel sub-agents. Given the repo's size, the lanes ran inline in the lead session, using concurrent independent tool calls.</li>
+</ul>
+
+<h2>Architecture map</h2>
+<pre>User (chat, Claude desktop Code tab)
+  └─► Claude Code session (Opus 5.5) ── skills: superpowers (brainstorm → spec → plan → verify), frontend-design
+        │  context: harness system prompt + auto-memory (~/.claude/projects/…/memory, 1 entry); no project CLAUDE.md
+        │  optional: Agent sub-agents (used 1–5×/session historically)
+        ├─► edits public/*.html, assets, src/worker.js
+        ├─► local check: preview_start "static" (python http.server :8845, repo root) → screenshots   [historical]
+        └─► git commit → git push origin main ──► (README) Cloudflare Workers deploy ──► naeemmood.com
+                                                     Worker: redirects, /blog (D1 or Substack RSS), /admin/new (Basic auth)
+State that survives: git history · session transcripts (*.jsonl) · auto-memory file · D1 (prod)
+Visibility: transcripts + git log + manual curl checks (historical); no outcome ledger, no CI</pre>
+
+<h2>Capability matrix</h2>
+<div class="tw"><table>
+<tr><th>Cat.</th><th>Capability</th><th>Status</th><th>Score</th><th>Basis</th></tr>
+<tr><td>A</td><td>Delivery lifecycle</td><td><span class="s PARTIAL">PARTIAL</span></td><td>6 / 15</td><td>A spec → implement flow exists (<code>docs/superpowers/specs/2026-07-02-…md</code>). Historical sessions show preview + screenshots before push. There are no tests, no CI, no reviewer independent of the author, and a push to main deploys. Evidence: historical and static.</td></tr>
+<tr><td>B</td><td>Delegation &amp; coordination</td><td><span class="s PARTIAL">PARTIAL</span></td><td>3 / 10</td><td>The Agent tool and the superpowers subagent/parallel skills are available, and transcripts show sub-agent use. No project-level handoff contracts, claim/lease, or cancellation mechanism. Coordination check UNVERIFIED.</td></tr>
+<tr><td>C</td><td>CLI / model routing</td><td><span class="s PARTIAL">PARTIAL</span></td><td>6 / 10</td><td>There's a single route (Claude Code → Opus 5.5), and it is working, as this session shows. <code>gh</code> is authenticated. Wrangler is not installed, and deploy auth is unknown. No fallback, which is acceptable at this scale.</td></tr>
+<tr><td>D</td><td>Evaluations &amp; E2E outcomes</td><td><span class="s FAIL">FAIL</span></td><td>1 / 15</td><td>There's no eval or test suite and no recorded outcome grades. The only evidence is historical screenshots and curl checks inside transcripts.</td></tr>
+<tr><td>E</td><td>Telemetry &amp; visibility</td><td><span class="s PARTIAL">PARTIAL</span></td><td>3 / 10</td><td>Session transcripts (7 files) and git log are durable traces. There's no task/outcome ledger and no correlation IDs. 3 <code>1p_failed_events</code> files show harness telemetry delivery failures.</td></tr>
+<tr><td>F</td><td>Persistent execution &amp; recovery</td><td><span class="s PARTIAL">PARTIAL</span></td><td>3 / 10</td><td>Git commits and resumable transcripts act as coarse checkpoints. There's no task state, stall detection, or idempotency ledger. Recovery was not reproduced.</td></tr>
+<tr><td>G</td><td>Memory &amp; context correctness</td><td><span class="s PARTIAL">PARTIAL</span></td><td>4 / 10</td><td>The memory store is project-scoped, with type, provenance (<code>originSessionId</code>), and <em>Why</em>/<em>How to apply</em> fields. There's no project CLAUDE.md. The correction/boundary test is UNVERIFIED.</td></tr>
+<tr><td>H</td><td>Goal selection / initiative</td><td><span class="s NA">N/A</span></td><td>—</td><td>No backlog, scheduler, or autonomous mode is configured or claimed for this project. All work is user-initiated.</td></tr>
+<tr><td>I</td><td>Controlled learning</td><td><span class="s PARTIAL">PARTIAL</span></td><td>3 / 10</td><td>One correction was captured as scoped memory with its rationale. Memory isn't versioned or evaluated, and there's no promotion or rollback process.</td></tr>
+<tr><td>J</td><td>Install &amp; config consistency</td><td><span class="s FAIL">FAIL</span></td><td>1 / 5</td><td>The README is stale (port, path, retired page, no Worker/D1). The plaintext token is in the allowlist. There are 221 accreted Bash allow rules. <code>wrangler.jsonc</code> <code>$schema</code> points at a missing <code>node_modules</code>.</td></tr>
+<tr><th colspan="3">Total (applicable 95)</th><th>30 / 95</th><th>Normalized 31.6 → <b>F</b>. The C+ cap for no independent outcome verification doesn't change the grade.</th></tr>
+</table></div>
+
+<h2>CLI / model availability</h2>
+<div class="tw"><table>
+<tr><th>Route</th><th>Installed</th><th>Auth / health</th><th>Evidence</th></tr>
+<tr><td>Claude Code desktop → Opus 5.5</td><td>Yes (app)</td><td><span class="s PASS">PASS</span> this audit ran on it</td><td>reproduced</td></tr>
+<tr><td><code>claude</code> CLI</td><td>Not on PATH</td><td><span class="s NA">N/A</span> not advertised by the project</td><td><code>which claude</code> → not found</td></tr>
+<tr><td><code>gh</code></td><td>/opt/homebrew/bin/gh</td><td><span class="s PASS">PASS</span> logged in (keyring)</td><td><code>gh auth status</code></td></tr>
+<tr><td><code>wrangler</code> (deploy/D1)</td><td>Not installed; <code>npx</code> on demand</td><td><span class="s UNVERIFIED">UNVERIFIED</span> not installed per audit rules</td><td>static</td></tr>
+<tr><td>Python static preview (<code>launch.json</code> "static")</td><td>Python 3.13.7</td><td><span class="s PARTIAL">PARTIAL</span> serves repo root; pages live under <code>/public/</code></td><td>static</td></tr>
+</table></div>
+
+<h2>Behavioral proofs</h2>
+<div class="tw"><table>
+<tr><th>Proof</th><th>Result</th><th>What was done</th></tr>
+<tr><td>End-to-end outcome</td><td><span class="s UNVERIFIED">UNVERIFIED</span></td><td>There's no isolated harness to run an agent task. <em>Historical:</em> transcripts from 2026-09-17 to 09-24 (rev range ending near <code>878723c</code>) show edit → preview/screenshot → push → curl status check. These are self-checks by the authoring agent, not independent grading. <em>Reproduced component check:</em> the Worker module ran under Node with mocked bindings, and the retired-URL redirect returned 301 to <code>/peak-human-protocol</code>. The live site returns 200/401/301 as expected.</td></tr>
+<tr><td>Checkpoint recovery</td><td><span class="s UNVERIFIED">UNVERIFIED</span></td><td>No task-state/checkpoint mechanism exists to exercise, and the <code>claude</code> CLI isn't available for a disposable interrupted run. Continuity relies on git plus session transcripts. Recovery was not reproduced.</td></tr>
+<tr><td>Memory correctness</td><td><span class="s UNVERIFIED">UNVERIFIED</span></td><td>I couldn't inject a correction fixture without writing to production memory. Static inspection: the store is project-scoped by path and the entry has provenance. The corrected-instruction precedence was not exercised.</td></tr>
+<tr><td>Goal selection</td><td><span class="s NA">N/A</span></td><td>No initiative mechanism is configured.</td></tr>
+<tr><td>Minor coordination check</td><td><span class="s UNVERIFIED">UNVERIFIED</span></td><td>No existing test or trace covers duplicate claims, conflicting edits, stalled workers, or cancellation. Sub-agent use is historical only.</td></tr>
+</table></div>
+
+<h2>Findings (severity-ranked)</h2>
+
+<div class="f h"><p><span class="sev HIGH">HIGH</span> · Config / secret exposure (J) · confidence: high</p>
+<p><b>Plaintext Cloudflare API token stored locally.</b> <code>.claude/settings.local.json:34</code> embeds a <code>CLOUDFLARE_API_TOKEN=cfut_…</code> value inside a permission rule. The same value appears in 2 session transcripts under <code>~/.claude/projects/…/*.jsonl</code>. The file is gitignored, and <code>git log -S cfut_</code> across all refs finds 0 hits, so it isn't in git history.</p>
+<p><b>Failure scenario:</b> Any process, backup, or shared transcript that reads these files gets a deploy-capable token for the production Worker.</p>
+<p><b>Fix:</b> Rotate the token in Cloudflare, delete the rule from the allowlist, and use <code>wrangler login</code> or a keychain-backed env var. <b>Verify:</b> <code>grep -rl cfut_ ~/.claude .claude</code> returns nothing, and the old token is revoked in the dashboard.</p></div>
+
+<div class="f h"><p><span class="sev HIGH">HIGH</span> · Delivery lifecycle / uncontrolled execution (A, J) · confidence: high</p>
+<p><b>Ungated agent path to production.</b> The allowlist pre-approves <code>git push *</code> (line 33), <code>git reset *</code> (41), <code>npx wrangler *</code> (48) and <code>env</code> (216), among 221 Bash rules. The README says pushing to <code>main</code> deploys. There's no CI, test, or review gate (<code>.github/</code> is absent).</p>
+<p><b>Failure scenario:</b> An agent pushes a broken or destructive change, or runs <code>wrangler d1 execute</code> against production, with no prompt and no check.</p>
+<p><b>Fix:</b> Prune the allowlist to read-only commands and keep push/deploy/reset/env on ask. Deploy from a preview branch, or add a minimal CI link-check before production. <b>Verify:</b> In a fresh session, <code>git push</code> triggers a permission prompt.</p></div>
+
+<div class="f m"><p><span class="sev MED">MEDIUM</span> · Delivery correctness (A) · confidence: high on the code path, the production state is UNVERIFIED</p>
+<p><b>Admin auth fails open if its secrets are missing.</b> <code>src/worker.js:51</code> builds the expected header from <code>env.ADMIN_USER</code>/<code>ADMIN_PASSWORD</code>. When they're unset, the credential <code>undefined:undefined</code> is accepted. I reproduced this in an isolated Node test with mocked bindings: 200 with the secrets unset, 401 with them set. Production returned 401 to an unauthenticated GET. I did not probe production with that credential.</p>
+<p><b>Fix:</b> Return 503 when either secret is missing, and compare in constant time. <b>Verify:</b> Rerun the scratch test and confirm 503 or 401 in the unset case.</p></div>
+
+<div class="f m"><p><span class="sev MED">MEDIUM</span> · Exposure (J) · confidence: high</p>
+<p><b>"Private" pages are publicly reachable, and robots.txt lists them.</b> <code>/research-private</code> and <code>/peak-life-os-private</code> return 200 live. Protection is only <code>noindex</code> plus <code>robots.txt</code> Disallow lines, and those lines publish the URLs.</p>
+<p><b>Fix:</b> If the content is non-public, gate these paths in the Worker (reuse <code>requireAuth</code>) and drop them from robots.txt. <b>Verify:</b> An unauthenticated GET returns 401.</p></div>
+
+<div class="f m"><p><span class="sev MED">MEDIUM</span> · Evaluation &amp; telemetry (D, E) · confidence: high</p>
+<p><b>No independent outcome record.</b> Completion evidence exists only inside session transcripts, as the authoring agent's own screenshots and curl checks. There's no ledger of attempted, failed, or abandoned work.</p>
+<p><b>Fix:</b> Add a small <code>checks/</code> script: an internal link and asset checker over <code>public/</code>, plus a Node test of <code>worker.js</code> like the one used here. Run it before push, and append results to a local log. <b>Verify:</b> The script exits non-zero on a deliberately broken link.</p></div>
+
+<div class="f l"><p><span class="sev LOW">LOW</span> · Config consistency / context (G, J) · confidence: high</p>
+<p><b>Stale README and no project instructions file.</b> <code>README.md:8-16</code> gives port 8843 and <code>/public/</code>, and lists the retired <code>work-with-me.html</code>. It doesn't mention the Worker, D1, or <code>/admin</code>. <code>launch.json</code> serves the repo root on 8845, so root-relative links and clean URLs don't resolve as they do in production. There's no CLAUDE.md capturing the deploy rules.</p>
+<p><b>Fix:</b> Refresh the README, add a short CLAUDE.md (deploy = push to main, what needs a preview check, private-page policy), and point the preview at <code>public/</code>. <b>Verify:</b> Links click through correctly in the local preview.</p></div>
+
+<div class="f l"><p><span class="sev LOW">LOW</span> · Learning (I) · confidence: medium</p>
+<p><b>Memory is unversioned and unevaluated.</b> It's a single entry outside git, with no review or rollback path. That's adequate at this scale, but a bad memory can't be audited or reverted.</p>
+<p><b>Fix:</b> Periodically review memory (for example with the consolidate-memory skill) and keep project-policy rules in a versioned CLAUDE.md instead.</p></div>
+
+<h2>Remediation plan (ordered)</h2>
+<ol>
+ <li>Rotate the Cloudflare token, then remove it from <code>settings.local.json</code> and scrub it from the transcripts.</li>
+ <li>Prune the permission allowlist, and put push, deploy, reset, and <code>env</code> back on ask.</li>
+ <li>Make <code>requireAuth</code> fail closed, then confirm production secrets exist with <code>wrangler secret list</code> (run by you).</li>
+ <li>Decide the policy for the private pages: gate them, or accept that they're public.</li>
+ <li>Add a pre-push check script (links plus a Worker unit test) and a CLAUDE.md that requires running it.</li>
+ <li>Refresh the README and the <code>launch.json</code> preview root.</li>
+</ol>
+
+<h2>Verification ledger (commands actually run)</h2>
+<div class="tw"><table>
+<tr><th>Command (summary)</th><th>Exit</th><th>Result</th><th>Proves / does not prove</th></tr>
+<tr><td><code>git rev-parse HEAD; git status; ls</code></td><td>0</td><td>878723c, clean</td><td>Revision and tree state.</td></tr>
+<tr><td>Read README, .gitignore, wrangler.jsonc, schema.sql, launch.json, settings (token redacted)</td><td>0</td><td>See findings</td><td>Static configuration only.</td></tr>
+<tr><td><code>git log --all -S cfut_</code>; <code>git ls-files .claude .dev.vars</code></td><td>0</td><td>0 history hits; only launch.json tracked</td><td>Token not committed. Doesn't cover other clones or backups.</td></tr>
+<tr><td><code>grep -l cfut_ ~/.claude/projects/…/*.jsonl | wc -l</code></td><td>0</td><td>2 files</td><td>Token is present in transcripts (value not printed).</td></tr>
+<tr><td><code>which claude wrangler node npx gh python3</code>; <code>gh auth status</code></td><td>1 (claude/wrangler missing)</td><td>node/npx/gh/python present; gh logged in</td><td>Installed runtimes. Not Cloudflare auth.</td></tr>
+<tr><td><code>node t.mjs</code> (scratchpad copy of worker.js, mocked ASSETS/D1)</td><td>0</td><td>401 / 200 / 401 / <b>200 when unset</b>; redirect 301</td><td>Auth fail-open code path and redirect logic. Not production secret state.</td></tr>
+<tr><td><code>curl -s -o /dev/null -w %{http_code}</code> on 6 live paths</td><td>0</td><td>/ 200 · /admin/new 401 · /blog 200 · 2 private pages 200 · /work-with-me 301</td><td>The live deployment is serving the current routing. Not which revision is deployed.</td></tr>
+<tr><td>Transcript stats via <code>grep -c</code>/<code>stat</code> (counts only)</td><td>0</td><td>7 sessions, 2026-09-17 to 09-28; push, preview, and screenshot activity present</td><td>Historical evidence of the verification habit. Not outcome correctness.</td></tr>
+<tr><td><code>ls ~/.claude/telemetry</code></td><td>0</td><td>3 failed-event files</td><td>Local telemetry delivery failures exist. Cause unknown.</td></tr>
+</table></div>
+<details><summary>Worker test output</summary>
+<pre>secrets set, no auth -> 401
+secrets set, right creds -> 200
+secrets set, undefined:undefined -> 401
+secrets UNSET, undefined:undefined -> 200
+retired redirect -> 301 https://example.test/peak-human-protocol</pre></details>
+
+<h2>Open checks</h2>
+<ul>
+ <li><b>Production admin secrets set?</b> Needs wrangler or dashboard access (not installed or used). Probing production with a guessed credential is out of scope.</li>
+ <li><b>Deploy pipeline (Workers Builds on push)?</b> The dashboard wasn't accessed, and there's no config in the repo.</li>
+ <li><b>End-to-end agent task, checkpoint recovery, memory correction, coordination?</b> No isolated harness, task state, or CLI to run a disposable agent. Doing these safely would mean building fixtures, which is implementation and outside audit scope.</li>
+</ul>
+
+<h2>Verified operating scope</h2>
+<p>The evidence supports <b>attended</b> work only. The user requests a change in chat, the agent edits static HTML/CSS or the Worker, previews it locally, and pushes, with the user watching. Nothing reproduced in this audit shows that work is verified independently of the authoring agent, recovers from interruption, or would be safe unattended. The current allowlist would let an unattended session deploy to production with no gate. Evidence stops at: the Worker's routing and auth logic (unit-level, mocked), live HTTP status codes, and historical transcripts showing self-verification.</p>
+
+</main></body>
+</html>
