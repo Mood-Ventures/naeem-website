@@ -15,9 +15,11 @@ document.querySelectorAll('.video-embed').forEach(function (wrap) {
   if (!thumb) return;
   thumb.addEventListener('click', function () {
     var id = wrap.getAttribute('data-yt-id');
+    var title = wrap.getAttribute('data-yt-title') || 'YouTube video player';
     var iframe = document.createElement('iframe');
-    iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
-    iframe.title = 'YouTube video player';
+    iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1';
+    iframe.title = title;
+    iframe.loading = 'lazy';
     iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
     iframe.allowFullscreen = true;
     wrap.innerHTML = '';

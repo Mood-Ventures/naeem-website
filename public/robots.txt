@@ -16,3 +16,5 @@ Disallow: /fountain-life-private
 Disallow: /fountain-life-private.html
 Disallow: /connect
 Disallow: /connect.html
+
+Sitemap: https://naeemmood.com/sitemap.xml
