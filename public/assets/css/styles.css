@@ -289,6 +289,7 @@ section { padding: 5rem 0; }
   .hero__grid .hero-photo { flex: 0 0 300px; }
   .hero__grid .hero__subtitle { margin-left: 0; }
   .hero__grid .cta-row { text-align: left; padding-left: 0; }
+  .hero__grid .hero__content { flex: 1 1 380px; }
 }
 
 /* Placeholders (photo / video) */
@@ -309,7 +310,7 @@ section { padding: 5rem 0; }
   padding: 1rem;
 }
 
-.hero__grid .hero__video { flex: 1 1 420px; max-width: 460px; width: 100%; }
+.hero__grid .hero__video { flex: 1.4 1 500px; max-width: 640px; width: 100%; }
 .hero__grid .hero__video .video-embed { margin-top: 0; }
 
 .hero-photo {
