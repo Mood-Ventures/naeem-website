@@ -314,10 +314,10 @@ function pageShell(inner, title, description) {
   <div class="container nav__inner">
     <a class="nav__logo" href="/">Naeem<span>Mahmood</span></a>
     <div class="nav__links">
-      <a class="nav__link" href="/peak-human-protocol">Work With Me</a>
+      <a class="nav__link" href="/speaking">Speaking</a>
+      <a class="nav__link" href="/peak-human-protocol">Peak Human Protocol</a>
       <a class="nav__link" href="/podcast">Podcast</a>
       <a class="nav__link" href="/about">About</a>
-      <a class="nav__link" href="/speaking">Speaking</a>
       <a class="nav__link" href="/books">Books</a>
       <a class="nav__link" href="/blog">Blog</a>
       <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply</a>
@@ -325,10 +325,10 @@ function pageShell(inner, title, description) {
     <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
   </div>
   <div class="nav__mobile container">
-    <a class="nav__link" href="/peak-human-protocol">Work With Me</a>
+    <a class="nav__link" href="/speaking">Speaking</a>
+    <a class="nav__link" href="/peak-human-protocol">Peak Human Protocol</a>
     <a class="nav__link" href="/podcast">Podcast</a>
     <a class="nav__link" href="/about">About</a>
-    <a class="nav__link" href="/speaking">Speaking</a>
     <a class="nav__link" href="/books">Books</a>
     <a class="nav__link" href="/blog">Blog</a>
     <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply</a>
@@ -357,7 +357,7 @@ function pageShell(inner, title, description) {
     <div class="site-footer__grid">
       <span class="site-footer__copyright">&copy; Mood Ventures LLC | 2026</span>
       <div class="site-footer__links">
-        <a href="/peak-human-protocol">Work With Me</a>
+        <a href="/peak-human-protocol">Peak Human Protocol</a>
         <a href="/podcast">Podcast</a>
         <a href="/about">About</a>
         <a href="/speaking">Speaking</a>
