@@ -9,6 +9,19 @@ document.querySelectorAll('.nav__toggle').forEach(function (btn) {
   });
 });
 
+document.querySelectorAll('.nav__mobile a').forEach(function (link) {
+  link.addEventListener('click', function () {
+    var panel = document.querySelector('.nav__mobile');
+    var btn = document.querySelector('.nav__toggle');
+    if (!panel || !panel.classList.contains('is-open')) return;
+    panel.classList.remove('is-open');
+    if (btn) {
+      btn.textContent = '☰';
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+});
+
 // Click-to-load YouTube embeds
 document.querySelectorAll('.video-embed').forEach(function (wrap) {
   var thumb = wrap.querySelector('.video-embed__thumb');
