@@ -24,6 +24,14 @@ export default {
       return Response.redirect(new URL('/peak-human-protocol', url.origin).toString(), 301);
     }
 
+    // Directory indexes, served with or without a trailing slash.
+    if (path === '/peakhuman' || path === '/peakhuman/') {
+      return env.ASSETS.fetch(new Request(new URL('/peakhuman/index.html', url.origin), request));
+    }
+    if (path === '/peakhuman/offer' || path === '/peakhuman/offer/') {
+      return env.ASSETS.fetch(new Request(new URL('/peakhuman/offer/index.html', url.origin), request));
+    }
+
     if (path === '/blog' || path === '/blog/' || path === '/blog.html') {
       return renderBlog(env);
     }

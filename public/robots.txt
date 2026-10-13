@@ -16,5 +16,8 @@ Disallow: /fountain-life-private
 Disallow: /fountain-life-private.html
 Disallow: /connect
 Disallow: /connect.html
+Disallow: /peakhuman/offer
+Disallow: /peakhuman/offer/
+Disallow: /peakhuman/offer/index.html
 
 Sitemap: https://naeemmood.com/sitemap.xml
