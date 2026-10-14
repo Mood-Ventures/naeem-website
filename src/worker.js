@@ -3,6 +3,9 @@
 // An hourly cron imports the Substack feed, and /blog repeats that import
 // when the last successful run is stale. Every other request falls through
 // to static assets.
+// POST /api/subscribe and the gift pop-up live in ./subscribe.js.
+
+import { handleSubscribe, injectGiftPopup } from './subscribe.js';
 
 const FEED_URL = 'https://nmood.substack.com/feed';
 const IMPORT_META_KEY = 'last_substack_import';
@@ -20,7 +23,18 @@ const RETIRED_TO_PROTOCOL = [
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const path = url.pathname;
+    if (url.pathname === '/api/subscribe') return handleSubscribe(request, env);
+    return injectGiftPopup(await route(request, env));
+  },
+
+  async scheduled(_controller, env, _ctx) {
+    await importSubstackPosts(env);
+  },
+};
+
+async function route(request, env) {
+  const url = new URL(request.url);
+  const path = url.pathname;
 
     if (RETIRED_TO_PROTOCOL.includes(path)) {
       return Response.redirect(new URL('/peakhuman/', url.origin).toString(), 301);
@@ -64,12 +78,7 @@ export default {
     }
 
     return env.ASSETS.fetch(request);
-  },
-
-  async scheduled(_controller, env, _ctx) {
-    await importSubstackPosts(env);
-  },
-};
+}
 
 // ---- Auth ----
 
