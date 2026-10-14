@@ -40,6 +40,15 @@ async function route(request, env) {
       return Response.redirect(new URL('/peakhuman/', url.origin).toString(), 301);
     }
 
+    // The old breakthrough-call page now books the 30-minute discovery call.
+    if (
+      path === '/breakthrough-call' ||
+      path === '/breakthrough-call/' ||
+      path === '/breakthrough-call.html'
+    ) {
+      return Response.redirect('https://tidycal.com/peakhumans/peakhuman-protocol-30', 301);
+    }
+
     // The old protocol URL now lives at /peakhuman/.
     if (
       path === '/peak-human-protocol' ||
@@ -661,7 +670,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
       <a class="nav__link" href="/about">About</a>
       <a class="nav__link" href="/books">Books</a>
       <a class="nav__link" href="/blog">Blog</a>
-      <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply</a>
+      <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
     </div>
     <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
   </div>
@@ -672,7 +681,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
     <a class="nav__link" href="/about">About</a>
     <a class="nav__link" href="/books">Books</a>
     <a class="nav__link" href="/blog">Blog</a>
-    <a class="btn btn--primary btn--small" href="/breakthrough-call">Apply</a>
+    <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
   </div>
 </nav>
 
@@ -706,7 +715,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
         <a href="/blog">Blog</a>
       </div>
       <div class="site-footer__links">
-        <a href="/breakthrough-call">Apply</a>
+        <a href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
       </div>
     </div>
     <div class="footer-contact">
@@ -1251,7 +1260,7 @@ function podcastPage(episodes) {
       <a class="nav__link" href="/about.html">About</a>
       <a class="nav__link" href="/books.html">Books</a>
       <a class="nav__link" href="/blog">Blog</a>
-      <a class="btn btn--primary btn--small" href="/breakthrough-call.html">Apply</a>
+      <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
     </div>
     <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
   </div>
@@ -1262,7 +1271,7 @@ function podcastPage(episodes) {
     <a class="nav__link" href="/about.html">About</a>
     <a class="nav__link" href="/books.html">Books</a>
     <a class="nav__link" href="/blog">Blog</a>
-    <a class="btn btn--primary btn--small" href="/breakthrough-call.html">Apply</a>
+    <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
   </div>
 </nav>
 
@@ -1297,7 +1306,7 @@ function podcastPage(episodes) {
   <section class="section--alt">
     <div class="container container--narrow reveal" style="text-align:center;">
       <h2>Want to go deeper?</h2>
-      <a class="btn btn--primary" href="/breakthrough-call.html">Apply for a Breakthrough Call &rarr;</a>
+      <a class="btn btn--primary" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for a Discovery Call &rarr;</a>
     </div>
   </section>
 
@@ -1316,7 +1325,7 @@ function podcastPage(episodes) {
         <a href="/blog">Blog</a>
       </div>
       <div class="site-footer__links">
-        <a href="/breakthrough-call.html">Apply</a>
+        <a href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
       </div>
     </div>
     <div class="footer-contact">

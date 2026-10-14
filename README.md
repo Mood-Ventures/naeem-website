@@ -16,7 +16,7 @@ Then open http://localhost:8843/public/
 - `work-with-me.html` — The SuperMood Standard
 - `speaking.html` — Keynote Speaking
 - `about.html` — About Naeem
-- `breakthrough-call.html` — Apply for a Breakthrough Call (TidyCal embed)
+- Apply and discovery-call buttons open https://tidycal.com/peakhumans/peakhuman-protocol-30. `/breakthrough-call` redirects there.
 - `assets/css/styles.css` — all styles
 - `assets/js/main.js` — mobile nav toggle + scroll-reveal animations
 - `assets/img/favicon.svg` — inline SVG favicon
