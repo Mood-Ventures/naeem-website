@@ -79,7 +79,7 @@
       '</form>',
       '<div class="gift-popup__thanks" hidden>',
       '<p>Download The Peak Humans Daily Protocol now. A copy is also coming to your inbox.</p>',
-      '<a class="gift-popup__download" href="' + PDF_FALLBACK + '">Download the PDF</a>',
+      '<a class="gift-popup__download" href="' + PDF_FALLBACK + '" target="_blank" rel="noopener">Download the PDF</a>',
       '</div>',
       '</div>'
     ].join('');
@@ -192,7 +192,12 @@
     thanks.hidden = false;
     title.textContent = 'Your protocol is ready';
     var linkEl = thanks.querySelector('a');
+    // Open the PDF in a new tab. Do not assign window.location or follow the
+    // link in this page; the thank-you message has to stay visible.
     linkEl.href = downloadUrl || PDF_FALLBACK;
+    linkEl.target = '_blank';
+    linkEl.rel = 'noopener';
+    linkEl.removeAttribute('download');
     linkEl.focus();
   }
 

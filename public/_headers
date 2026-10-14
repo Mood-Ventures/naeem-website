@@ -1,0 +1,5 @@
+# Keep the protocol PDF inline so target="_blank" opens it in a tab.
+/gifts/peak-humans-daily-protocol.pdf
+  Content-Type: application/pdf
+  Content-Disposition: inline
+  X-Content-Type-Options: nosniff
