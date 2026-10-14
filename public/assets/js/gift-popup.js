@@ -21,6 +21,18 @@
   link.href = '/assets/css/gift-popup.css';
   document.head.appendChild(link);
 
+  // Solid card colors before the stylesheet arrives, so the dialog never
+  // paints as transparent text over the page.
+  var critical = document.createElement('style');
+  critical.textContent = [
+    'dialog.gift-popup{background:transparent;color:#f5f5f5;border:0;padding:0}',
+    'dialog.gift-popup .gift-popup__card{background:#141414;color:#f5f5f5;border:1px solid rgba(245,245,245,.12);border-radius:16px;padding:2.25rem 1.75rem 1.75rem}',
+    'dialog.gift-popup .gift-popup__card h2{color:#fff;font-family:Georgia,serif}',
+    'dialog.gift-popup .gift-popup__input{background:#0a0a0a;color:#fff;border:1px solid rgba(245,245,245,.2);font-size:16px}',
+    'dialog.gift-popup .gift-popup__submit,dialog.gift-popup .gift-popup__download{background:#00f0ff;color:#0a0a0a}'
+  ].join('');
+  document.head.appendChild(critical);
+
   var dialog = null;
   var opened = false;
   var previousFocus = null;
@@ -85,13 +97,29 @@
     dialog.querySelector('form').addEventListener('submit', onSubmit);
   }
 
+  function cssApplied() {
+    try {
+      return !!(link.sheet && link.sheet.cssRules && link.sheet.cssRules.length);
+    } catch (err) {
+      return false;
+    }
+  }
+
   function whenCssReady(fn) {
-    if (link.sheet) {
+    if (cssApplied()) {
       fn();
       return;
     }
-    link.addEventListener('load', fn, { once: true });
-    link.addEventListener('error', fn, { once: true });
+    var done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      fn();
+    }
+    link.addEventListener('load', finish, { once: true });
+    link.addEventListener('error', finish, { once: true });
+    // A cached sheet can finish before this listener is attached.
+    if (cssApplied()) finish();
   }
 
   function openPopup() {
