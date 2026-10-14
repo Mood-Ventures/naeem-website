@@ -3,6 +3,9 @@
   "name": "naeem-website",
   "main": "src/worker.js",
   "compatibility_date": "2025-01-01",
+  "triggers": {
+    "crons": ["0 * * * *"]
+  },
   "assets": {
     "directory": "public",
     "binding": "ASSETS",

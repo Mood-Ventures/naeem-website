@@ -1,11 +1,13 @@
-// Serves /blog with native posts stored in D1 (falling back to the Peak
-// Humans Substack RSS feed when no native posts exist yet), and a
-// password-protected /admin/new page for publishing new posts without
-// touching code. Every other request falls through to static assets.
+// Serves /blog from D1. Native posts (written in /admin/new) and newsletters
+// imported from the Peak Humans Substack feed live in the same table.
+// An hourly cron imports the feed, and /blog repeats that import when the
+// last successful run is stale, so new letters show up before cron fires.
+// Every other request falls through to static assets.
 
 const FEED_URL = 'https://nmood.substack.com/feed';
-const FEED_CACHE_SECONDS = 600;
-const MAX_POSTS = 20;
+const IMPORT_META_KEY = 'last_substack_import';
+// Match the hourly cron so a page view does not refetch the feed all day.
+const IMPORT_MAX_AGE_MS = 60 * 60 * 1000;
 
 // Retired URLs that now fold into the Peak Human Protocol master page.
 const RETIRED_TO_PROTOCOL = [
@@ -58,6 +60,10 @@ export default {
     }
 
     return env.ASSETS.fetch(request);
+  },
+
+  async scheduled(_controller, env, _ctx) {
+    await importSubstackPosts(env);
   },
 };
 
@@ -132,18 +138,24 @@ function sanitizeHtml(html) {
 // ---- Rendering ----
 
 async function renderBlog(env) {
+  try {
+    await maybeImportSubstack(env);
+  } catch (err) {
+    console.error('Substack import failed', err);
+  }
+
   const { results } = await env.BLOG_DB
     .prepare('SELECT slug, title, body_html, published_at FROM posts ORDER BY published_at DESC LIMIT 50')
     .all();
 
-  if (results && results.length > 0) {
-    const body = `<div class="blog-list">${results.map(nativePostCard).join('\n')}</div>`;
-    return new Response(pageShell(body, 'The Blog', 'Essays on the work underneath the work.'), {
-      headers: { 'content-type': 'text/html; charset=utf-8' },
-    });
-  }
+  const posts = results || [];
+  const body = posts.length
+    ? `<div class="blog-list">${posts.map(nativePostCard).join('\n')}</div>`
+    : `<p class="blog-empty">New essays are on the way. In the meantime, <a href="https://nmood.substack.com" target="_blank" rel="noopener">visit the Peak Humans Substack</a>.</p>`;
 
-  return renderSubstackBlog();
+  return new Response(pageShell(body, 'The Blog', 'Essays on the work underneath the work.'), {
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  });
 }
 
 function nativePostCard(post) {
@@ -165,8 +177,9 @@ function nativePostCard(post) {
 }
 
 async function renderPost(env, slug) {
+  await ensureSchema(env);
   const post = await env.BLOG_DB
-    .prepare('SELECT title, body_html, published_at FROM posts WHERE slug = ?')
+    .prepare('SELECT title, body_html, published_at, source_url FROM posts WHERE slug = ?')
     .bind(slug)
     .first();
 
@@ -177,12 +190,16 @@ async function renderPost(env, slug) {
     });
   }
 
+  const source = post.source_url
+    ? `<a class="post-back" href="${escapeHtml(post.source_url)}" rel="noopener">Originally published on Substack</a>`
+    : '';
   const body = `
     <p class="post-meta">${escapeHtml(formatDate(post.published_at))}</p>
     <div class="post-body">${post.body_html}</div>
+    ${source}
     <a class="post-back" href="/blog">&larr; Back to the blog</a>
   `;
-  return new Response(pageShell(body, post.title, ''), {
+  return new Response(pageShell(body, post.title, '', { canonical: post.source_url || '' }), {
     headers: { 'content-type': 'text/html; charset=utf-8' },
   });
 }
@@ -210,49 +227,142 @@ function renderAdminForm(error) {
   });
 }
 
-async function renderSubstackBlog() {
-  let posts = [];
-  let feedError = false;
-  try {
-    const res = await fetch(FEED_URL, {
-      cf: { cacheTtl: FEED_CACHE_SECONDS, cacheEverything: true },
-    });
-    if (!res.ok) throw new Error('feed HTTP ' + res.status);
-    posts = parseFeed(await res.text());
-  } catch (e) {
-    feedError = true;
+// ---- Substack import ----
+
+let schemaReady = false;
+
+async function ensureSchema(env) {
+  if (schemaReady) return;
+  const info = await env.BLOG_DB.prepare('PRAGMA table_info(posts)').all();
+  const names = new Set((info.results || []).map((col) => col.name));
+  if (!names.has('source_url')) {
+    try {
+      await env.BLOG_DB.prepare('ALTER TABLE posts ADD COLUMN source_url TEXT').run();
+    } catch (err) {
+      const message = String(err && err.message ? err.message : err);
+      if (!/duplicate column/i.test(message)) throw err;
+    }
   }
-
-  const body = feedError || posts.length === 0
-    ? `<p class="blog-empty">New essays are on the way. In the meantime, <a href="https://nmood.substack.com" target="_blank" rel="noopener">visit the Peak Humans Substack</a>.</p>`
-    : `<div class="blog-list">${posts.map(substackPostCard).join('\n')}</div>`;
-
-  return new Response(pageShell(body, 'The Blog', 'Essays on the work underneath the work.'), {
-    headers: {
-      'content-type': 'text/html; charset=utf-8',
-      'cache-control': `public, max-age=${FEED_CACHE_SECONDS}`,
-    },
-  });
+  await env.BLOG_DB.prepare(
+    `CREATE TABLE IF NOT EXISTS import_meta (
+       key TEXT PRIMARY KEY,
+       value TEXT NOT NULL
+     )`
+  ).run();
+  schemaReady = true;
 }
 
-function parseFeed(xml) {
+async function maybeImportSubstack(env) {
+  await ensureSchema(env);
+  const row = await env.BLOG_DB
+    .prepare('SELECT value FROM import_meta WHERE key = ?')
+    .bind(IMPORT_META_KEY)
+    .first();
+  const last = row ? Date.parse(row.value) : NaN;
+  if (!Number.isNaN(last) && Date.now() - last < IMPORT_MAX_AGE_MS) return;
+  await importSubstackPosts(env);
+}
+
+async function importSubstackPosts(env) {
+  await ensureSchema(env);
+  const res = await fetch(FEED_URL, {
+    headers: { Accept: 'application/rss+xml, application/xml, text/xml' },
+    cf: { cacheTtl: 60, cacheEverything: true },
+  });
+  if (!res.ok) throw new Error('feed HTTP ' + res.status);
+  const xml = await res.text();
+  const posts = parseFeedItems(xml);
+  const itemCount = (xml.match(/<item\b/g) || []).length;
+  if (itemCount > 0 && posts.length === 0) {
+    throw new Error('Substack feed had items but none could be parsed');
+  }
+
+  const seen = new Set();
+  const statements = [];
+  for (const post of posts) {
+    if (seen.has(post.slug)) continue;
+    seen.add(post.slug);
+    statements.push(
+      env.BLOG_DB.prepare(
+        `INSERT INTO posts (slug, title, body_html, published_at, source_url)
+         VALUES (?, ?, ?, ?, ?)
+         ON CONFLICT(slug) DO NOTHING`
+      ).bind(post.slug, post.title, post.bodyHtml, post.publishedAt, post.canonical)
+    );
+  }
+  if (statements.length) await env.BLOG_DB.batch(statements);
+
+  await env.BLOG_DB.prepare(
+    `INSERT INTO import_meta (key, value) VALUES (?, ?)
+     ON CONFLICT(key) DO UPDATE SET value = excluded.value`
+  ).bind(IMPORT_META_KEY, new Date().toISOString()).run();
+}
+
+function parseFeedItems(xml) {
   const posts = [];
-  const items = xml.match(/<item>[\s\S]*?<\/item>/g) || [];
-  for (const item of items.slice(0, MAX_POSTS)) {
-    const title = extract(item, 'title');
-    const link = extract(item, 'link');
-    const description = extract(item, 'description');
-    const pubDate = extract(item, 'pubDate');
+  const items = xml.match(/<item\b[^>]*>[\s\S]*?<\/item>/g) || [];
+  for (const item of items) {
+    const title = extractXml(item, 'title');
+    const link = extractXml(item, 'link');
+    const pubDate = extractXml(item, 'pubDate');
+    const content = extractXml(item, 'content:encoded');
+    const description = extractXml(item, 'description');
     if (!title || !link) continue;
-    posts.push({ title, link, description, date: formatRssDate(pubDate) });
+    const canonical = canonicalUrl(link);
+    const slug = slugFromSubstack(link, title);
+    const bodyHtml = content.trim() || (description ? `<p>${escapeHtml(description)}</p>` : '');
+    if (!canonical || !slug || !bodyHtml) continue;
+    posts.push({
+      slug,
+      title,
+      bodyHtml,
+      publishedAt: toSqliteUtc(pubDate),
+      canonical,
+    });
   }
   return posts;
 }
 
-function extract(block, tag) {
-  const m = block.match(new RegExp('<' + tag + '>([\\s\\S]*?)<\\/' + tag + '>'));
+function extractXml(block, tag) {
+  const safe = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const m = block.match(new RegExp('<' + safe + '(?:\\s[^>]*)?>([\\s\\S]*?)</' + safe + '>'));
   if (!m) return '';
-  return decodeEntities(m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/, '$1').trim());
+  return unwrapXmlText(m[1]).trim();
+}
+
+function unwrapXmlText(raw) {
+  const cdata = raw.match(/^\s*<!\[CDATA\[([\s\S]*)\]\]>\s*$/);
+  if (cdata) return cdata[1];
+  return decodeEntities(raw.trim());
+}
+
+function canonicalUrl(link) {
+  try {
+    const url = new URL(link.trim());
+    if (url.protocol !== 'https:' || url.hostname !== 'nmood.substack.com') return '';
+    url.hash = '';
+    url.search = '';
+    return url.toString();
+  } catch {
+    return '';
+  }
+}
+
+function slugFromSubstack(link, title) {
+  try {
+    const path = new URL(link.trim()).pathname;
+    const match = path.match(/\/p\/([^/]+)\/?$/);
+    if (match) return slugify(decodeURIComponent(match[1]));
+  } catch {
+    // Fall through to the title.
+  }
+  return slugify(title);
+}
+
+function toSqliteUtc(pubDate) {
+  const date = new Date(pubDate);
+  const stamp = Number.isNaN(date.getTime()) ? new Date() : date;
+  return stamp.toISOString().slice(0, 19).replace('T', ' ');
 }
 
 function decodeEntities(s) {
@@ -274,12 +384,6 @@ function decodeEntities(s) {
     .replace(/&amp;/g, '&');
 }
 
-function formatRssDate(pubDate) {
-  const d = new Date(pubDate);
-  if (isNaN(d)) return '';
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-}
-
 function formatDate(isoDate) {
   const d = new Date(isoDate.replace(' ', 'T') + 'Z');
   if (isNaN(d)) return '';
@@ -290,18 +394,7 @@ function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function substackPostCard(post) {
-  return `<article class="post-card">
-    <a class="post-card__link" href="${escapeHtml(post.link)}" target="_blank" rel="noopener">
-      <h3>${escapeHtml(post.title)}</h3>
-      ${post.date ? `<p class="post-card__date">${escapeHtml(post.date)}</p>` : ''}
-      ${post.description ? `<p class="post-card__excerpt">${escapeHtml(post.description)}</p>` : ''}
-      <span class="post-card__cta">Read on Substack &rarr;</span>
-    </a>
-  </article>`;
-}
-
-function pageShell(inner, title, description) {
+function pageShell(inner, title, description, options = {}) {
   const pageTitle = title === 'The Blog' ? 'Naeem Mahmood — Peak Performance for High Achievers' : `${escapeHtml(title)} | Naeem Mahmood`;
   const heroTitle = title || 'The Blog';
   const heroSubtitle = description || '';
@@ -315,6 +408,7 @@ function pageShell(inner, title, description) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${pageTitle}</title>
+${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="canonical" href="${escapeHtml(options.canonical)}">` : ''}
 <meta name="description" content="Executive coaching for high performers who are winning on paper and losing everywhere that matters. Peak Mind. Peak Body. Peak Love.">
 <meta name="author" content="Naeem Mahmood">
 <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
