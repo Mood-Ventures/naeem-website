@@ -1,5 +1,6 @@
 // Serves /blog from D1 (native posts and imported Substack letters) and
-// /podcast from the Peak Humans RSS feed, Spotify show, and YouTube channel.
+// /podcast from the Peak Humans RSS feed (guest interviews only), Spotify
+// show, and YouTube channel.
 // An hourly cron imports the Substack feed, and /blog repeats that import
 // when the last successful run is stale. Every other request falls through
 // to static assets.
@@ -731,7 +732,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
 </html>`;
 }
 
-export { normalizePostHtml };
+export { normalizePostHtml, isGuestInterview, guestInterviewDecision, interviewSearchText };
 
 // ---- Podcast ----
 // Apple Podcasts id 1523759669. The RSS feed URL is looked up at request
@@ -776,9 +777,19 @@ const MANUAL_YOUTUBE = [
   { title: 'The Magic of Sharing with Zach Bell', id: '6NTLmvnrCSY' },
 ];
 
+// Hand fixes for episodes the title/show-notes detector gets wrong.
+// Key an episode by its RSS <guid> or by the normalized title slug
+// (lowercase words, episode numbers removed). Value is 'include' or 'exclude'.
+const INTERVIEW_OVERRIDES = {
+  // Show notes never confirm a guest. Change the value to force the page:
+  // 'Buzzsprout-9369751': 'include', // Cryptocurrency and Community Building | Pedro Rivera
+  // 'Buzzsprout-9087266': 'include', // One Of The Most Important Lessons | Tony Robbins
+  // '11353bc9-d6d5-4333-bb71-22332ce8ce31': 'include', // Inside the Minds of Two of AI's Most Important Voices
+};
+
 // The page shell is cached separately from the feeds. Bump this when the
-// shell changes, or a deploy keeps serving the previous HTML.
-const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=discovery-call';
+// shell or the episode filter changes, or a deploy keeps serving the previous HTML.
+const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=interviews';
 
 async function renderPodcast(request) {
   const cache = podcastCache();
@@ -854,8 +865,9 @@ async function loadPodcastEpisodes() {
   const episodes = mergePodcastEpisodes(rss.episodes, spotify, rss.artwork);
   if (!episodes.length) return manualFallbackEpisodes();
   assignYouTube(episodes, parseYouTubeFeed(ytXml), MANUAL_YOUTUBE);
-  episodes.sort((a, b) => (b.publishedMs || 0) - (a.publishedMs || 0));
-  return episodes;
+  const interviews = episodes.filter(isGuestInterview);
+  interviews.sort((a, b) => (b.publishedMs || 0) - (a.publishedMs || 0));
+  return interviews;
 }
 
 function manualFallbackEpisodes() {
@@ -864,6 +876,7 @@ function manualFallbackEpisodes() {
     publishedMs: 0,
     dateLabel: '',
     description: '',
+    searchText: '',
     artwork: youtubeThumb(video.id),
     audioUrl: '',
     youtubeId: video.id,
@@ -925,6 +938,7 @@ function parsePodcastRss(xml) {
       publishedMs: Number.isNaN(publishedMs) ? 0 : publishedMs,
       dateLabel: formatPublished(pubDate),
       description: shortDescription(description),
+      searchText: interviewSearchText(description),
       artwork: attrValue(item, 'itunes:image', 'href') || artwork,
       link: safeHttps(extractXml(item, 'link')),
       enclosure: safeHttps(attrValue(item, 'enclosure', 'url')),
@@ -964,14 +978,18 @@ function parseSpotifyCreators(html) {
   }
   const list = data && data.episodePreview && data.episodePreview.episodes;
   if (!Array.isArray(list)) return [];
-  return list.map((episode) => ({
-    title: episode.title || '',
-    uuid: episode.podcastEpisodeUuid || '',
-    spotifyUrl: safeHttps(episode.spotifyUrl || ''),
-    artwork: safeHttps(episode.episodeImage || ''),
-    description: shortDescription(episode.descriptionPreview || episode.description || ''),
-    publishedMs: Date.parse(episode.publishOn) || 0,
-  })).filter((episode) => episode.title);
+  return list.map((episode) => {
+    const raw = episode.descriptionPreview || episode.description || '';
+    return {
+      title: episode.title || '',
+      uuid: episode.podcastEpisodeUuid || '',
+      spotifyUrl: safeHttps(episode.spotifyUrl || ''),
+      artwork: safeHttps(episode.episodeImage || ''),
+      description: shortDescription(raw),
+      searchText: interviewSearchText(raw),
+      publishedMs: Date.parse(episode.publishOn) || 0,
+    };
+  }).filter((episode) => episode.title);
 }
 
 function parseSpotifyEmbed(html) {
@@ -1004,6 +1022,7 @@ function parseSpotifyEmbed(html) {
     spotifyUrl: episodeId ? `https://open.spotify.com/episode/${episodeId}` : '',
     artwork: safeHttps((bestImage && bestImage.url) || ''),
     description: '',
+    searchText: '',
     publishedMs: Date.parse(entity.releaseDate && entity.releaseDate.isoString) || 0,
   }];
 }
@@ -1032,6 +1051,7 @@ function mergePodcastEpisodes(rssEpisodes, spotifyEpisodes, showArtwork) {
       if (!episode.spotifyUrl && spotify.spotifyUrl) episode.spotifyUrl = spotify.spotifyUrl;
       if (!episode.artwork && spotify.artwork) episode.artwork = spotify.artwork;
       if (!episode.description && spotify.description) episode.description = spotify.description;
+      if (!episode.searchText && spotify.searchText) episode.searchText = spotify.searchText;
       continue;
     }
     if (!spotify.title) continue;
@@ -1041,6 +1061,7 @@ function mergePodcastEpisodes(rssEpisodes, spotifyEpisodes, showArtwork) {
       publishedMs: spotify.publishedMs || 0,
       dateLabel: spotify.publishedMs ? formatPublished(spotify.publishedMs) : '',
       description: spotify.description || '',
+      searchText: spotify.searchText || '',
       artwork: spotify.artwork || showArtwork || '',
       link: '',
       enclosure: '',
@@ -1118,12 +1139,209 @@ function normalizeTitle(title) {
     .trim();
 }
 
-function shortDescription(html) {
+// A guest is two to four capitalized name tokens. The host's own name is not a guest.
+const HOST_NAME = /^(?:naeem(?:\s+s)?(?:\s+mahmood)?|naeem\s+mood)$/i;
+const NAME_PREFIX = /^(?:dr|prof|professor|coach|reverend|mr|mrs|ms)\.?$/i;
+const NAME_SUFFIX = /^(?:m\.?d\.?|ph\.?d\.?|jr\.?|sr\.?|ii|iii|iv)\.?$/i;
+const NAME_TOKEN = /^[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÿ'’.\-]*$/;
+const NAME_STOP = new Set([
+  'a', 'an', 'the', 'and', 'or', 'of', 'for', 'to', 'in', 'on', 'at', 'from', 'by', 'with',
+  'who', 'what', 'how', 'why', 'when', 'where', 'your', 'my', 'our', 'their', 'his', 'her',
+  'its', 'this', 'that', 'these', 'those', 'into', 'over', 'about', 'than', 'then', 'but',
+  'not', 'no', 'more', 'most', 'less', 'you', 'we', 'they', 'it', 'as', 'if', 'so', 'just',
+  'only', 'also', 'new', 'best', 'true', 'real', 'high', 'low', 'top', 'all', 'any', 'each',
+  'every', 'other', 'another', 'such', 'very', 'too', 'out', 'up', 'down', 'off', 'via', 'per',
+  'vs', 'versus', 'using', 'through', 'across', 'after', 'before', 'between', 'without',
+  'within', 'during', 'while', 'because', 'since', 'until', 'upon', 'onto', 'toward',
+  'towards', 'clients', 'client', 'impact', 'business', 'success', 'life', 'time', 'work',
+  'people', 'humans', 'human', 'performance', 'peak', 'energy', 'health', 'money', 'mind',
+  'body', 'love', 'day', 'world', 'future', 'power', 'way', 'ways', 'things', 'something',
+  'anything', 'everything', 'nothing',
+]);
+
+function isGuestInterview(episode) {
+  return guestInterviewDecision(episode).include;
+}
+
+function guestInterviewDecision(episode) {
+  const guid = String(episode && episode.guid || '').trim();
+  const slug = normalizeTitle(episode && episode.title);
+  const forced = INTERVIEW_OVERRIDES[guid] || INTERVIEW_OVERRIDES[slug];
+  if (forced === 'include') return { include: true, reason: 'override-include' };
+  if (forced === 'exclude') return { include: false, reason: 'override-exclude' };
+
+  const title = coreEpisodeTitle(episode && episode.title);
+  const notes = String((episode && (episode.searchText || episode.description)) || '');
+  const withGuest = personAfter(title, /\bwith\s+/ig);
+  if (withGuest) return { include: true, reason: 'with:' + withGuest.full };
+  const feat = personAfter(title, /\b(?:featuring|feat|ft)\.?\s+/ig);
+  if (feat) return { include: true, reason: 'feat:' + feat.full };
+  const cross = crossGuest(title);
+  if (cross) return { include: true, reason: 'cross:' + cross };
+  if (/\binterviews?\b/i.test(title)) return { include: true, reason: 'title-interview' };
+
+  const talked = personAfter(notes, /\b(?:interviews|interviewed|interview with|talks with|talked with|sits down with|sitting down with|joined by)\s+/ig);
+  if (talked) return { include: true, reason: 'notes-interview:' + talked.full };
+
+  const named = pipeGuest(title) || nameOnGuest(title) || ofOrgGuest(title);
+  if (!named) return { include: false, reason: 'solo' };
+  const confirmed = bioConfirms(notes, named);
+  if (!confirmed) return { include: false, reason: 'unconfirmed:' + named.full };
+  if (confirmed.weak && isCommentary(title, notes)) {
+    return { include: false, reason: 'commentary:' + named.full };
+  }
+  return { include: true, reason: confirmed.kind + ':' + named.full };
+}
+
+function coreEpisodeTitle(title) {
+  return plainText(title)
+    .replace(/\s*\|\s*(?:ep|episode)\s*#?\s*\d+\s*$/i, '')
+    .replace(/\s+\b(?:ep|episode)\s*#?\s*\d+\s*$/i, '')
+    .trim();
+}
+
+function personAfter(text, pattern) {
+  pattern.lastIndex = 0;
+  let match;
+  while ((match = pattern.exec(text))) {
+    const person = leadingPerson(text.slice(match.index + match[0].length));
+    if (person) return person;
+  }
+  return null;
+}
+
+function crossGuest(title) {
+  const pattern = /(^|\s)([A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÿ'’\-]+)\s+x\s+([A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÿ'’\-]+)(?=\s|$)/g;
+  let match;
+  while ((match = pattern.exec(title))) {
+    const left = match[2];
+    const right = match[3];
+    if (NAME_STOP.has(left.toLowerCase()) || NAME_STOP.has(right.toLowerCase())) continue;
+    if (isHostName(left) || isHostName(right)) continue;
+    return left + ' x ' + right;
+  }
+  return '';
+}
+
+function pipeGuest(title) {
+  const parts = title.split('|').map((part) => part.trim()).filter(Boolean);
+  if (parts.length < 2) return null;
+  let tail = parts[parts.length - 1];
+  if (/^(?:ep|episode)\s*#?\s*\d+$/i.test(tail) && parts.length >= 3) tail = parts[parts.length - 2];
+  if (/^(?:ep|episode)\s*#?\s*\d+$/i.test(tail)) return null;
+  return exactPerson(tail);
+}
+
+function nameOnGuest(title) {
+  const match = title.match(/^(.+?)\s+on\s+/i);
+  if (!match) return null;
+  const person = exactPerson(match[1]);
+  if (!person) return null;
+  const gerund = person.full.split(' ').some((part) => part.length > 4 && /ing$/i.test(part));
+  if (gerund) return null;
+  return person;
+}
+
+function ofOrgGuest(title) {
+  const match = title.match(/\b([A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÿ'’\-]+(?:\s+[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÿ'’\-]+){1,2})\s+of\s+[A-Z]{2,8}\s*$/);
+  if (!match) return null;
+  return exactPerson(match[1]);
+}
+
+function bioConfirms(notes, person) {
+  const first = escapeRegExp(person.first);
+  const full = escapeRegExp(person.full);
+  if (new RegExp('\\bconnect with ' + first + '\\b', 'i').test(notes)) return { kind: 'connect', weak: false };
+  if (new RegExp('\\bi met ' + first + '\\b', 'i').test(notes)) return { kind: 'met', weak: false };
+  if (new RegExp('\\bin this\\b[\\s\\S]{0,80}\\bepisode\\b[\\s\\S]{0,80}\\b' + first + '\\b', 'i').test(notes)) {
+    return { kind: 'episode', weak: false };
+  }
+  if (new RegExp('\\b' + first + '\\s+(?:shares|discusses|joins)\\b', 'i').test(notes)) {
+    return { kind: 'shares', weak: false };
+  }
+  const head = notes.slice(0, 1600);
+  if (new RegExp('\\b' + full + '\\b[\\s\\S]{0,90}\\b(?:is|was)\\b', 'i').test(head)) {
+    return { kind: 'fullname-is', weak: true };
+  }
+  if (
+    new RegExp('\\b' + full + '\\b', 'i').test(notes)
+    && new RegExp('\\b' + first + '\\s+is\\s+(?:a|an|the)\\b', 'i').test(head)
+  ) {
+    return { kind: 'first-is', weak: true };
+  }
+  return null;
+}
+
+function isCommentary(title, notes) {
+  if (/^\s*["“]/.test(notes)) return true;
+  if (/\b(?:read|reading)\b[\s\S]{0,100}\b(?:article|biography)\b/i.test(notes)) return true;
+  if (/\b(?:read|reading)\b[\s\S]{0,50}\b(?:the\s+)?book\b/i.test(notes)) return true;
+  if (/delves into the wisdom/i.test(notes)) return true;
+  if (/explore the remarkable journey/i.test(notes)) return true;
+  if (/\b(?:'s|’s)\s+(?:life lessons|rules for|affirmations|mental models|resilience)\b/i.test(title)) return true;
+  if (/\bwikipedia\b/i.test(notes)) return true;
+  return false;
+}
+
+function exactPerson(fragment) {
+  const person = leadingPerson(fragment);
+  if (!person) return null;
+  const words = String(fragment || '').trim().split(/\s+/);
+  const rest = words.slice(person.wordCount).join(' ').replace(/[,:;!?]+$/g, '');
+  if (rest && !NAME_SUFFIX.test(rest)) return null;
+  return person;
+}
+
+function leadingPerson(fragment) {
+  const words = String(fragment || '').trim().split(/\s+/).filter(Boolean);
+  let index = 0;
+  let wordCount = 0;
+  if (words[0] && NAME_PREFIX.test(words[0])) {
+    index++;
+    wordCount++;
+  }
+  const tokens = [];
+  for (; index < words.length && tokens.length < 4; index++) {
+    const raw = words[index].replace(/[,:;!?)"']+$/g, '').replace(/^["'(]+/g, '');
+    if (!raw) break;
+    if (NAME_SUFFIX.test(raw)) break;
+    if (!NAME_TOKEN.test(raw) || NAME_STOP.has(raw.toLowerCase().replace(/\./g, ''))) break;
+    tokens.push(raw.replace(/\.$/, ''));
+    wordCount++;
+  }
+  if (tokens.length < 2) return null;
+  const full = tokens.join(' ');
+  if (isHostName(full)) return null;
+  return { full, first: tokens[0], last: tokens[tokens.length - 1], wordCount };
+}
+
+function isHostName(name) {
+  const normalized = String(name || '').toLowerCase().replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  return HOST_NAME.test(normalized);
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function plainText(html) {
   let text = String(html || '')
     .replace(/<br\s*\/?>/gi, ' ')
     .replace(/<\/p>/gi, ' ')
     .replace(/<[^>]+>/g, ' ');
-  text = decodeEntities(text).replace(/[\u200B-\u200D\u2060\uFEFF\u00AD]/g, '').replace(/\s+/g, ' ').trim();
+  return decodeEntities(text)
+    .replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, ' ')
+    .replace(/[\u200B-\u200D\u2060\uFEFF\u00AD]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function interviewSearchText(html) {
+  return plainText(html).slice(0, 2500);
+}
+
+function shortDescription(html) {
+  let text = plainText(html);
   const cut = text.search(/\b(?:work with naeem|subscribe \+|about naeem|connect with naeem|i would really appreciate|interested in sponsoring)\b|\*{5,}/i);
   if (cut > 40) text = text.slice(0, cut).trim();
   if (text.length > 280) {
