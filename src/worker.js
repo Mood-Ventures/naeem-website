@@ -21,7 +21,16 @@ export default {
     const path = url.pathname;
 
     if (RETIRED_TO_PROTOCOL.includes(path)) {
-      return Response.redirect(new URL('/peak-human-protocol', url.origin).toString(), 301);
+      return Response.redirect(new URL('/peakhuman/', url.origin).toString(), 301);
+    }
+
+    // The old protocol URL now lives at /peakhuman/.
+    if (
+      path === '/peak-human-protocol' ||
+      path === '/peak-human-protocol/' ||
+      path === '/peak-human-protocol.html'
+    ) {
+      return Response.redirect(new URL('/peakhuman/', url.origin).toString(), 301);
     }
 
     // Directory indexes, served with or without a trailing slash.
@@ -323,7 +332,7 @@ function pageShell(inner, title, description) {
     <a class="nav__logo" href="/">Naeem<span>Mahmood</span></a>
     <div class="nav__links">
       <a class="nav__link" href="/speaking">Speaking</a>
-      <a class="nav__link" href="/peak-human-protocol">Peak Human Protocol</a>
+      <a class="nav__link" href="/peakhuman/">Peak Human Protocol</a>
       <a class="nav__link" href="/podcast">Podcast</a>
       <a class="nav__link" href="/about">About</a>
       <a class="nav__link" href="/books">Books</a>
@@ -334,7 +343,7 @@ function pageShell(inner, title, description) {
   </div>
   <div class="nav__mobile container">
     <a class="nav__link" href="/speaking">Speaking</a>
-    <a class="nav__link" href="/peak-human-protocol">Peak Human Protocol</a>
+    <a class="nav__link" href="/peakhuman/">Peak Human Protocol</a>
     <a class="nav__link" href="/podcast">Podcast</a>
     <a class="nav__link" href="/about">About</a>
     <a class="nav__link" href="/books">Books</a>
@@ -365,7 +374,7 @@ function pageShell(inner, title, description) {
     <div class="site-footer__grid">
       <span class="site-footer__copyright">&copy; Mood Ventures LLC | 2026</span>
       <div class="site-footer__links">
-        <a href="/peak-human-protocol">Peak Human Protocol</a>
+        <a href="/peakhuman/">Peak Human Protocol</a>
         <a href="/podcast">Podcast</a>
         <a href="/about">About</a>
         <a href="/speaking">Speaking</a>
