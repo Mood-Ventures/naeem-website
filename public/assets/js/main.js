@@ -49,7 +49,9 @@ if ('IntersectionObserver' in window) {
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15 });
+  // threshold 0: a tall block (the blog index is thousands of pixels) never
+  // reaches a 15% intersection ratio, so it stayed invisible but clickable.
+  }, { threshold: 0 });
 
   document.querySelectorAll('.reveal').forEach(function (el) {
     observer.observe(el);

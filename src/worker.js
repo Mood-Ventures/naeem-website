@@ -1,10 +1,8 @@
-// Serves /blog from D1. Native posts (written in /admin/new) and newsletters
-// imported from the Peak Humans Substack feed live in the same table.
-// An hourly cron imports the feed, and /blog repeats that import when the
-// last successful run is stale, so new letters show up before cron fires.
-// Serves /podcast from the Peak Humans RSS feed (feed URL resolved via the
-// iTunes lookup API), the public Spotify show, and Naeem's YouTube channel
-// feed. Every other request falls through to static assets.
+// Serves /blog from D1 (native posts and imported Substack letters) and
+// /podcast from the Peak Humans RSS feed, Spotify show, and YouTube channel.
+// An hourly cron imports the Substack feed, and /blog repeats that import
+// when the last successful run is stale. Every other request falls through
+// to static assets.
 
 const FEED_URL = 'https://nmood.substack.com/feed';
 const IMPORT_META_KEY = 'last_substack_import';
@@ -90,7 +88,7 @@ function requireAuth(request, env) {
 async function handleCreatePost(request, env) {
   const form = await request.formData();
   const title = (form.get('title') || '').toString().trim();
-  const bodyHtml = sanitizeHtml((form.get('body_html') || '').toString().trim());
+  const bodyHtml = normalizePostHtml((form.get('body_html') || '').toString().trim());
 
   if (!title || !bodyHtml) {
     return renderAdminForm('Title and body are both required.');
@@ -127,10 +125,8 @@ async function uniqueSlug(env, base) {
   }
 }
 
-// Allowlist-based sanitizer. The admin form is password-gated (single
-// trusted assistant), so this is defense in depth, not a public-input
-// sanitizer: it strips scripts/handlers/dangerous URLs but otherwise
-// preserves the pasted formatting.
+// Strips scripts, handlers, and dangerous URLs. Pasted Substack markup is
+// normalized further in normalizePostHtml.
 function sanitizeHtml(html) {
   return html
     .replace(/<(script|style|iframe|object|embed|form|input|button|link|meta)[^>]*>[\s\S]*?<\/\1>/gi, '')
@@ -139,6 +135,218 @@ function sanitizeHtml(html) {
     .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
     .replace(/\s(href|src)\s*=\s*"\s*javascript:[^"]*"/gi, '')
     .replace(/\s(href|src)\s*=\s*'\s*javascript:[^']*'/gi, '');
+}
+
+const DROP_TAGS = new Set([
+  'script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button',
+  'link', 'meta', 'svg', 'source', 'noscript',
+]);
+const DROP_CLASSES = [
+  'button-wrapper',
+  'captioned-button-wrap',
+  'image-link-expand',
+  'preamble',
+  'subscription-widget',
+  'subscribe-widget',
+];
+const VOID_TAGS = new Set([
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr',
+]);
+
+// Turn stored Substack (or pasted) HTML into the same simple markup native
+// posts use: paragraphs, lists, links, and images. Existing rows are cleaned
+// at render time, and new imports are stored already cleaned.
+function normalizePostHtml(html) {
+  if (!html) return '';
+  let out = sanitizeHtml(String(html));
+  out = replaceCaptionedImages(out);
+  out = removeElements(out, (name, raw) => {
+    const tag = name.toLowerCase();
+    if (DROP_TAGS.has(tag)) return true;
+    const cls = tagAttr(raw, 'class');
+    if (DROP_CLASSES.some((token) => hasClass(cls, token))) return true;
+    if (/button|subscribe/i.test(tagAttr(raw, 'data-component-name'))) return true;
+    return false;
+  });
+  out = out.replace(/<a\b[^>]*\bclass\s*=\s*("[^"]*\bbutton\b[^"]*"|'[^']*\bbutton\b[^']*')[^>]*>[\s\S]*?<\/a>/gi, '');
+  out = out.replace(/<p[^>]*>\s*<em>\s*If you found value in the newsletter share it[\s\S]*?<\/em>\s*<\/p>/gi, '');
+  out = stripPresentationalAttrs(out);
+  out = out.replace(/<img\b[^>]*>/gi, (tag) => cleanImageTag(tag));
+  out = out.replace(/<\/?span\b[^>]*>/gi, '');
+  for (let n = 0; n < 4; n++) {
+    const next = out
+      .replace(/<p[^>]*>\s*<\/p>/gi, '')
+      .replace(/<div[^>]*>\s*<\/div>/gi, '')
+      .replace(/<figure[^>]*>\s*<\/figure>/gi, '');
+    if (next === out) break;
+    out = next;
+  }
+  return out.replace(/\s{2,}/g, ' ').replace(/>\s+</g, '>\n<').trim();
+}
+
+function replaceCaptionedImages(html) {
+  return replaceBalanced(html, 'div', (raw) => hasClass(tagAttr(raw, 'class'), 'captioned-image-container'), (inner) => {
+    const img = inner.match(/<img\b[^>]*>/i);
+    if (!img) return '';
+    return `<figure class="post-figure">${cleanImageTag(img[0])}</figure>`;
+  });
+}
+
+function cleanImageTag(tag) {
+  const src = tagAttr(tag, 'src').trim();
+  if (!src || /^\s*javascript:/i.test(src)) return '';
+  const alt = tagAttr(tag, 'alt');
+  return `<img src="${src}" alt="${alt}" loading="lazy">`;
+}
+
+function stripPresentationalAttrs(html) {
+  return html.replace(/<([a-zA-Z][\w:-]*)\b([^>]*)>/g, (full, name, attrs) => {
+    if (full.startsWith('</')) return full;
+    const cleaned = attrs.replace(/\s(?:style|width|height|srcset|sizes|fetchpriority|data-[\w:-]+|class)\s*=\s*("[^"]*"|'[^']*')/gi, (attr) => {
+      if (/^\sclass\s*=/i.test(attr) && /post-figure/.test(attr)) return attr;
+      return '';
+    });
+    return `<${name}${cleaned}>`;
+  });
+}
+
+function hasClass(classAttr, name) {
+  return new RegExp('(?:^|\\s)' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?:\\s|$)').test(classAttr || '');
+}
+
+function tagAttr(tag, name) {
+  const match = tag.match(new RegExp('\\s' + name + '\\s*=\\s*("([^"]*)"|\'([^\']*)\')', 'i'));
+  if (!match) return '';
+  return match[2] != null ? match[2] : (match[3] || '');
+}
+
+function dropping(stack) {
+  for (const frame of stack) if (frame.drop) return true;
+  return false;
+}
+
+function removeElements(html, shouldRemove) {
+  let i = 0;
+  let out = '';
+  const stack = [];
+  while (i < html.length) {
+    const lt = html.indexOf('<', i);
+    if (lt === -1) {
+      if (!dropping(stack)) out += html.slice(i);
+      break;
+    }
+    if (!dropping(stack)) out += html.slice(i, lt);
+    if (html.startsWith('<!--', lt)) {
+      const end = html.indexOf('-->', lt);
+      const next = end === -1 ? html.length : end + 3;
+      if (!dropping(stack)) out += html.slice(lt, next);
+      i = next;
+      continue;
+    }
+    const gt = html.indexOf('>', lt);
+    if (gt === -1) {
+      if (!dropping(stack)) out += html.slice(lt);
+      break;
+    }
+    const raw = html.slice(lt, gt + 1);
+    const nameMatch = raw.match(/^<\s*(\/?)\s*([a-zA-Z][\w:-]*)/);
+    if (!nameMatch) {
+      if (!dropping(stack)) out += raw;
+      i = gt + 1;
+      continue;
+    }
+    const isClose = nameMatch[1] === '/';
+    const lower = nameMatch[2].toLowerCase();
+    const selfClosing = /\/\s*>$/.test(raw) || VOID_TAGS.has(lower);
+    if (isClose) {
+      let dropThis = false;
+      for (let s = stack.length - 1; s >= 0; s--) {
+        const frame = stack.pop();
+        dropThis = frame.drop;
+        if (frame.name === lower) break;
+      }
+      if (!dropThis && !dropping(stack)) out += raw;
+    } else if (selfClosing) {
+      if (!(dropping(stack) || shouldRemove(nameMatch[2], raw))) out += raw;
+    } else {
+      const drop = dropping(stack) || shouldRemove(nameMatch[2], raw);
+      stack.push({ name: lower, drop });
+      if (!drop) out += raw;
+    }
+    i = gt + 1;
+  }
+  return out;
+}
+
+function replaceBalanced(html, tagName, matchOpen, replacer) {
+  const lowerTag = tagName.toLowerCase();
+  let i = 0;
+  let out = '';
+  while (i < html.length) {
+    const lt = html.indexOf('<', i);
+    if (lt === -1) {
+      out += html.slice(i);
+      break;
+    }
+    out += html.slice(i, lt);
+    if (html.startsWith('<!--', lt)) {
+      const end = html.indexOf('-->', lt);
+      const next = end === -1 ? html.length : end + 3;
+      out += html.slice(lt, next);
+      i = next;
+      continue;
+    }
+    const gt = html.indexOf('>', lt);
+    if (gt === -1) {
+      out += html.slice(lt);
+      break;
+    }
+    const raw = html.slice(lt, gt + 1);
+    const nameMatch = raw.match(/^<\s*([a-zA-Z][\w:-]*)/);
+    const name = nameMatch ? nameMatch[1].toLowerCase() : '';
+    const isOpen = name === lowerTag && !raw.startsWith('</') && !/\/\s*>$/.test(raw);
+    if (isOpen && matchOpen(raw)) {
+      const end = findBalancedEnd(html, gt + 1, lowerTag);
+      if (!end) {
+        out += raw;
+        i = gt + 1;
+        continue;
+      }
+      out += replacer(html.slice(gt + 1, end.closeStart), raw);
+      i = end.after;
+    } else {
+      out += raw;
+      i = gt + 1;
+    }
+  }
+  return out;
+}
+
+function findBalancedEnd(html, from, tagName) {
+  let depth = 1;
+  let i = from;
+  const openRe = new RegExp('^<' + tagName + '\\b', 'i');
+  const closeRe = new RegExp('^</' + tagName + '\\b', 'i');
+  while (i < html.length) {
+    const lt = html.indexOf('<', i);
+    if (lt === -1) return null;
+    if (html.startsWith('<!--', lt)) {
+      const end = html.indexOf('-->', lt);
+      i = end === -1 ? html.length : end + 3;
+      continue;
+    }
+    const gt = html.indexOf('>', lt);
+    if (gt === -1) return null;
+    const raw = html.slice(lt, gt + 1);
+    if (closeRe.test(raw)) {
+      depth -= 1;
+      if (depth === 0) return { closeStart: lt, after: gt + 1 };
+    } else if (openRe.test(raw) && !/\/\s*>$/.test(raw)) {
+      depth += 1;
+    }
+    i = gt + 1;
+  }
+  return null;
 }
 
 // ---- Rendering ----
@@ -165,18 +373,22 @@ async function renderBlog(env) {
 }
 
 function nativePostCard(post) {
-  const imgMatch = post.body_html.match(/^\s*<img[^>]*\ssrc="([^"]+)"[^>]*>/i);
+  const html = normalizePostHtml(post.body_html || '');
+  const imgMatch = html.match(/<img\b[^>]*\ssrc="([^"]+)"/i);
   const thumb = imgMatch
-    ? `<div class="post-card__thumb"><img src="${escapeHtml(imgMatch[1])}" alt="" loading="lazy"></div>`
+    ? `<div class="post-card__thumb"><img src="${escapeHtml(decodeEntities(imgMatch[1]))}" alt="" loading="lazy"></div>`
     : '';
-  const textOnly = imgMatch ? post.body_html.slice(imgMatch[0].length) : post.body_html;
-  const excerpt = decodeEntities(textOnly.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim().slice(0, 180);
+  const plain = decodeEntities(
+    html.replace(/<figure\b[^>]*>[\s\S]*?<\/figure>/gi, ' ').replace(/<[^>]+>/g, ' ')
+  ).replace(/\s+/g, ' ').replace(/\s+([,.;:!?])/g, '$1').trim();
+  const excerpt = plain.slice(0, 180);
+  const more = plain.length > 180 ? '&hellip;' : '';
   return `<article class="post-card">
     <a class="post-card__link" href="/blog/${escapeHtml(post.slug)}">
       ${thumb}
       <h3>${escapeHtml(post.title)}</h3>
       <p class="post-card__date">${escapeHtml(formatDate(post.published_at))}</p>
-      <p class="post-card__excerpt">${escapeHtml(excerpt)}&hellip;</p>
+      ${excerpt ? `<p class="post-card__excerpt">${escapeHtml(excerpt)}${more}</p>` : ''}
       <span class="post-card__cta">Read more &rarr;</span>
     </a>
   </article>`;
@@ -200,10 +412,12 @@ async function renderPost(env, slug) {
     ? `<a class="post-back" href="${escapeHtml(post.source_url)}" rel="noopener">Originally published on Substack</a>`
     : '';
   const body = `
-    <p class="post-meta">${escapeHtml(formatDate(post.published_at))}</p>
-    <div class="post-body">${post.body_html}</div>
-    ${source}
-    <a class="post-back" href="/blog">&larr; Back to the blog</a>
+    <article class="post-article">
+      <p class="post-meta">${escapeHtml(formatDate(post.published_at))}</p>
+      <div class="post-body">${normalizePostHtml(post.body_html || '')}</div>
+      ${source}
+      <a class="post-back" href="/blog">&larr; Back to the blog</a>
+    </article>
   `;
   return new Response(pageShell(body, post.title, '', { canonical: post.source_url || '' }), {
     headers: { 'content-type': 'text/html; charset=utf-8' },
@@ -316,7 +530,8 @@ function parseFeedItems(xml) {
     if (!title || !link) continue;
     const canonical = canonicalUrl(link);
     const slug = slugFromSubstack(link, title);
-    const bodyHtml = content.trim() || (description ? `<p>${escapeHtml(description)}</p>` : '');
+    const rawBody = content.trim() || (description ? `<p>${escapeHtml(description)}</p>` : '');
+    const bodyHtml = normalizePostHtml(rawBody);
     if (!canonical || !slug || !bodyHtml) continue;
     posts.push({
       slug,
@@ -462,7 +677,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
   </section>
 
   <section class="section--alt">
-    <div class="container container--narrow reveal">
+    <div class="container container--narrow">
       ${inner}
     </div>
   </section>
@@ -497,6 +712,8 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
 </body>
 </html>`;
 }
+
+export { normalizePostHtml };
 
 // ---- Podcast ----
 // Apple Podcasts id 1523759669. The RSS feed URL is looked up at request
