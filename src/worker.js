@@ -776,9 +776,13 @@ const MANUAL_YOUTUBE = [
   { title: 'The Magic of Sharing with Zach Bell', id: '6NTLmvnrCSY' },
 ];
 
+// The page shell is cached separately from the feeds. Bump this when the
+// shell changes, or a deploy keeps serving the previous HTML.
+const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=discovery-call';
+
 async function renderPodcast(request) {
   const cache = podcastCache();
-  const pageRequest = new Request(new URL('/podcast', request.url).toString(), { method: 'GET' });
+  const pageRequest = new Request(new URL(PODCAST_PAGE_CACHE_KEY, request.url).toString(), { method: 'GET' });
   if (cache) {
     try {
       const hit = await cache.match(pageRequest);
@@ -795,7 +799,7 @@ async function renderPodcast(request) {
     console.error('podcast feeds failed', err);
   }
 
-  const html = podcastPage(episodes);
+  const html = podcastPage(episodes).replaceAll('Breakthrough Call', 'Discovery Call');
   const response = new Response(html, {
     headers: {
       'content-type': 'text/html; charset=utf-8',
