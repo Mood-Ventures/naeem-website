@@ -21,6 +21,11 @@ const RETIRED_TO_PROTOCOL = [
   '/work-with-me', '/work-with-me.html',
 ];
 
+// Native duplicate of the Substack import. Keep the -cc8 slug: the hourly
+// feed insert uses ON CONFLICT(slug) DO NOTHING and would recreate it.
+const DUPLICATE_NATIVE_BLOG_SLUG = 'problem-frame-vs-outcome-frame';
+const DUPLICATE_KEPT_BLOG_PATH = '/blog/problem-frame-vs-outcome-frame-cc8';
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -57,6 +62,14 @@ async function route(request, env) {
       path === '/peak-human-protocol.html'
     ) {
       return Response.redirect(new URL('/peakhuman/', url.origin).toString(), 301);
+    }
+
+    // Native "Problem Frame vs. Outcome Frame" duplicates the Substack import.
+    if (
+      path === `/blog/${DUPLICATE_NATIVE_BLOG_SLUG}` ||
+      path === `/blog/${DUPLICATE_NATIVE_BLOG_SLUG}/`
+    ) {
+      return Response.redirect(new URL(DUPLICATE_KEPT_BLOG_PATH, url.origin).toString(), 301);
     }
 
     // Directory indexes, served with or without a trailing slash.
@@ -378,7 +391,8 @@ async function renderBlog(env) {
   }
 
   const { results } = await env.BLOG_DB
-    .prepare('SELECT slug, title, body_html, published_at FROM posts ORDER BY published_at DESC LIMIT 50')
+    .prepare('SELECT slug, title, body_html, published_at FROM posts WHERE slug != ? ORDER BY published_at DESC LIMIT 50')
+    .bind(DUPLICATE_NATIVE_BLOG_SLUG)
     .all();
 
   const posts = results || [];
