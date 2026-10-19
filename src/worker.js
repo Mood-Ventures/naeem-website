@@ -21,6 +21,13 @@ const RETIRED_TO_PROTOCOL = [
   '/work-with-me', '/work-with-me.html',
 ];
 
+// Retired inactive pages that now redirect to the homepage.
+const RETIRED_TO_HOME = [
+  '/connect', '/connect/', '/connect.html',
+  '/daily', '/daily/', '/daily.html',
+  '/supermood-invitation', '/supermood-invitation/', '/supermood-invitation.html',
+];
+
 // Native duplicate of the Substack import. Keep the -cc8 slug: the hourly
 // feed insert uses ON CONFLICT(slug) DO NOTHING and would recreate it.
 const DUPLICATE_NATIVE_BLOG_SLUG = 'problem-frame-vs-outcome-frame';
@@ -41,6 +48,10 @@ export default {
 async function route(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
+
+    if (RETIRED_TO_HOME.includes(path)) {
+      return Response.redirect(new URL('/', url.origin).toString(), 301);
+    }
 
     if (RETIRED_TO_PROTOCOL.includes(path)) {
       return Response.redirect(new URL('/peakhuman/', url.origin).toString(), 301);

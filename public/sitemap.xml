@@ -41,11 +41,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://naeemmood.com/daily</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://naeemmood.com/peak-life-os</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
