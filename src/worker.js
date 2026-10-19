@@ -396,13 +396,40 @@ async function renderBlog(env) {
     .all();
 
   const posts = results || [];
-  const body = posts.length
-    ? `<div class="blog-list">${posts.map(nativePostCard).join('\n')}</div>`
+  const cards = [...STATIC_POSTS.map(staticPostCard), ...posts.map(nativePostCard)];
+  const body = cards.length
+    ? `<div class="blog-list">${cards.join('\n')}</div>`
     : `<p class="blog-empty">New essays are on the way. In the meantime, <a href="https://nmood.substack.com" target="_blank" rel="noopener">visit the Peak Humans Substack</a>.</p>`;
 
   return new Response(pageShell(body, 'The Blog', 'Essays on the work underneath the work.'), {
     headers: { 'content-type': 'text/html; charset=utf-8' },
   });
+}
+
+// Hand-built posts that live as static pages in public/ (full SEO head and
+// JSON-LD) rather than in D1. Listed above the D1 posts on /blog.
+const STATIC_POSTS = [
+  {
+    href: '/what-is-myelination',
+    title: 'What Is Myelination? How Practice Shapes Your Brain',
+    date: '2026-10-19',
+    excerpt: 'What is myelination? A plain-language guide to myelin, synaptic pruning and deliberate practice, and what they mean for changing habits and beliefs.',
+    thumb: 'https://naeemmood.com/assets/img/og-what-is-myelination.png',
+    alt: 'What is myelination? Myelin, the insulation that makes practice stick.',
+  },
+];
+
+function staticPostCard(post) {
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(post.date) ? formatDate(post.date + ' 12:00:00') : '';
+  return `<article class="post-card">
+    <a class="post-card__link" href="${escapeHtml(post.href)}">
+      ${post.thumb ? `<div class="post-card__thumb"><img src="${escapeHtml(post.thumb)}" alt="${escapeHtml(post.alt || '')}" loading="lazy"></div>` : ''}
+      <h3>${escapeHtml(post.title)}</h3>
+      ${date ? `<p class="post-card__date">${escapeHtml(date)}</p>` : ''}
+      <p class="post-card__excerpt">${escapeHtml(post.excerpt)}</p>
+      <span class="post-card__cta">Read more &rarr;</span>
+    </a>
+  </article>`;
 }
 
 function nativePostCard(post) {
@@ -649,7 +676,7 @@ function escapeHtml(s) {
 }
 
 function pageShell(inner, title, description, options = {}) {
-  const pageTitle = title === 'The Blog' ? 'Naeem Mahmood — Peak Performance for High Achievers' : `${escapeHtml(title)} | Naeem Mahmood`;
+  const pageTitle = title === 'The Blog' ? 'Naeem Mahmood | Peak Performance for High Achievers' : `${escapeHtml(title)} | Naeem Mahmood`;
   const heroTitle = title || 'The Blog';
   const heroSubtitle = description || '';
   return `<!DOCTYPE html>
