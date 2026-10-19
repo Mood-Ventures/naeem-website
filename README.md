@@ -21,6 +21,10 @@ Then open http://localhost:8843/public/
 - `assets/js/main.js` — mobile nav toggle + scroll-reveal animations
 - `assets/img/favicon.svg` — inline SVG favicon
 
+## Blog posts
+
+Links inside a blog post (the article body, sources, calls to action, and inline links) open in a new tab with `target="_blank"` and `rel="noopener"`. The renderer adds those attributes to anchors in post bodies and on the blog index cards. Leave site navigation, the footer, and the logo in the same tab.
+
 ## Deploying (GitHub + Cloudflare)
 
 This project deploys as a Cloudflare Workers static-assets site (see `wrangler.jsonc`). Push to `main` to deploy. Point the `naeemmood.com` custom domain at the Worker from the Cloudflare dashboard once ready to cut over DNS.
