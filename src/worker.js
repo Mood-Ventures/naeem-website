@@ -1568,7 +1568,7 @@ function podcastPage(episodes) {
 
   <section class="hero">
     <div class="container hero__inner reveal">
-      <img class="podcast-headshot" src="/assets/img/naeem-podcast-headshot.webp" alt="Naeem Mahmood, host of the Peak Humans podcast" width="480" height="480">
+      <img class="podcast-headshot" src="/assets/img/naeem-podcast-headshot.webp" alt="Black and white headshot of Naeem Mahmood, host of the Peak Humans podcast" width="480" height="480">
       <h1>Peak Humans Podcast</h1>
       <p class="hero__subtitle">Conversations on mastering the art of peak performance.</p>
     </div>
