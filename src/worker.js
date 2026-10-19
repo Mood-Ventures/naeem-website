@@ -213,7 +213,33 @@ function normalizePostHtml(html) {
     if (next === out) break;
     out = next;
   }
-  return out.replace(/\s{2,}/g, ' ').replace(/>\s+</g, '>\n<').trim();
+  out = out.replace(/\s{2,}/g, ' ').replace(/>\s+</g, '>\n<').trim();
+  return openPostLinksInNewTab(out);
+}
+
+// Every link inside post content opens in a new tab. Nav, footer, and logo
+// links are outside this HTML and stay in the same tab.
+function openPostLinksInNewTab(html) {
+  return html.replace(/<a\b([^>]*)>/gi, (full, attrs) => {
+    let next = attrs;
+    if (/\btarget\s*=/i.test(next)) {
+      next = next.replace(/\btarget\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/i, 'target="_blank"');
+    } else {
+      next += ' target="_blank"';
+    }
+    if (/\brel\s*=/i.test(next)) {
+      next = next.replace(/\brel\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/i, (match, value) => {
+        const quoted = value.startsWith('"') || value.startsWith("'");
+        const raw = quoted ? value.slice(1, -1) : value;
+        const parts = raw.split(/\s+/).filter(Boolean);
+        if (!parts.includes('noopener')) parts.push('noopener');
+        return `rel="${parts.join(' ')}"`;
+      });
+    } else {
+      next += ' rel="noopener"';
+    }
+    return `<a${next}>`;
+  });
 }
 
 function replaceCaptionedImages(html) {
@@ -422,7 +448,7 @@ const STATIC_POSTS = [
 function staticPostCard(post) {
   const date = /^\d{4}-\d{2}-\d{2}$/.test(post.date) ? formatDate(post.date + ' 12:00:00') : '';
   return `<article class="post-card">
-    <a class="post-card__link" href="${escapeHtml(post.href)}">
+    <a class="post-card__link" href="${escapeHtml(post.href)}" target="_blank" rel="noopener">
       ${post.thumb ? `<div class="post-card__thumb"><img src="${escapeHtml(post.thumb)}" alt="${escapeHtml(post.alt || '')}" loading="lazy"></div>` : ''}
       <h3>${escapeHtml(post.title)}</h3>
       ${date ? `<p class="post-card__date">${escapeHtml(date)}</p>` : ''}
@@ -444,7 +470,7 @@ function nativePostCard(post) {
   const excerpt = plain.slice(0, 180);
   const more = plain.length > 180 ? '&hellip;' : '';
   return `<article class="post-card">
-    <a class="post-card__link" href="/blog/${escapeHtml(post.slug)}">
+    <a class="post-card__link" href="/blog/${escapeHtml(post.slug)}" target="_blank" rel="noopener">
       ${thumb}
       <h3>${escapeHtml(post.title)}</h3>
       <p class="post-card__date">${escapeHtml(formatDate(post.published_at))}</p>
@@ -469,7 +495,7 @@ async function renderPost(env, slug) {
   }
 
   const source = post.source_url
-    ? `<a class="post-back" href="${escapeHtml(post.source_url)}" rel="noopener">Originally published on Substack</a>`
+    ? `<a class="post-back" href="${escapeHtml(post.source_url)}" target="_blank" rel="noopener">Originally published on Substack</a>`
     : '';
   const body = `
     <article class="post-article">
@@ -494,7 +520,7 @@ function renderAdminForm(error) {
 
       <label for="editor">Body</label>
       <div id="editor" class="admin-editor" contenteditable="true"></div>
-      <p class="admin-hint">Paste your newsletter directly into the box above. Formatting like bold, links, and paragraphs will carry over.</p>
+      <p class="admin-hint">Paste your newsletter directly into the box above. Formatting like bold, links, and paragraphs will carry over. Links in the post open in a new tab.</p>
       <input type="hidden" id="body_html" name="body_html">
 
       <div class="cta-row">
