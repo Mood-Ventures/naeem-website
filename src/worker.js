@@ -856,7 +856,7 @@ const INTERVIEW_OVERRIDES = {
 
 // The page shell is cached separately from the feeds. Bump this when the
 // shell or the episode filter changes, or a deploy keeps serving the previous HTML.
-const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=interviews';
+const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=interviews&v=cta2';
 
 async function renderPodcast(request) {
   const cache = podcastCache();
