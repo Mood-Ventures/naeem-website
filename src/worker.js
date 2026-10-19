@@ -738,7 +738,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
       <a class="nav__link" href="/about">About</a>
       <a class="nav__link" href="/books">Books</a>
       <a class="nav__link" href="/blog">Blog</a>
-      <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
+      <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
     </div>
     <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
   </div>
@@ -749,7 +749,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
     <a class="nav__link" href="/about">About</a>
     <a class="nav__link" href="/books">Books</a>
     <a class="nav__link" href="/blog">Blog</a>
-    <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
+    <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
   </div>
 </nav>
 
@@ -783,7 +783,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
         <a href="/blog">Blog</a>
       </div>
       <div class="site-footer__links">
-        <a href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
+        <a href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
       </div>
     </div>
     <div class="footer-contact">
@@ -1549,7 +1549,7 @@ function podcastPage(episodes) {
       <a class="nav__link" href="/about.html">About</a>
       <a class="nav__link" href="/books.html">Books</a>
       <a class="nav__link" href="/blog">Blog</a>
-      <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
+      <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
     </div>
     <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
   </div>
@@ -1560,7 +1560,7 @@ function podcastPage(episodes) {
     <a class="nav__link" href="/about.html">About</a>
     <a class="nav__link" href="/books.html">Books</a>
     <a class="nav__link" href="/blog">Blog</a>
-    <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
+    <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
   </div>
 </nav>
 
@@ -1595,7 +1595,7 @@ function podcastPage(episodes) {
   <section class="section--alt">
     <div class="container container--narrow reveal" style="text-align:center;">
       <h2>Want to go deeper?</h2>
-      <a class="btn btn--primary" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for a Discovery Call &rarr;</a>
+      <a class="btn btn--primary" href="https://tidycal.com/peakhumans" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
     </div>
   </section>
 
@@ -1614,7 +1614,7 @@ function podcastPage(episodes) {
         <a href="/blog">Blog</a>
       </div>
       <div class="site-footer__links">
-        <a href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply</a>
+        <a href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
       </div>
     </div>
     <div class="footer-contact">
