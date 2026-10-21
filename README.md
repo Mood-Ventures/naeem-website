@@ -13,6 +13,7 @@ Then open http://localhost:8843/public/
 ## Structure
 
 - `index.html` — Home
+- `connect.html`: hidden contact card at `/connect` (business-card QR). Not in the nav, footer, or sitemap. `noindex, nofollow`.
 - `work-with-me.html` — The SuperMood Standard
 - `speaking.html` — Keynote Speaking
 - `about.html` — About Naeem
