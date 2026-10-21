@@ -21,9 +21,11 @@ const RETIRED_TO_PROTOCOL = [
   '/work-with-me', '/work-with-me.html',
 ];
 
+// Hidden business-card contact page. Not linked from nav, footer, or sitemap.
+const CONNECT_PATHS = ['/connect', '/connect/', '/connect.html'];
+
 // Retired inactive pages that now redirect to the homepage.
 const RETIRED_TO_HOME = [
-  '/connect', '/connect/', '/connect.html',
   '/daily', '/daily/', '/daily.html',
   '/supermood-invitation', '/supermood-invitation/', '/supermood-invitation.html',
 ];
@@ -37,7 +39,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/api/subscribe') return handleSubscribe(request, env);
-    return injectGiftPopup(await route(request, env));
+    const response = await route(request, env);
+    // The contact card is a QR landing. Skip the protocol opt-in on it.
+    if (CONNECT_PATHS.includes(url.pathname)) return response;
+    return injectGiftPopup(response);
   },
 
   async scheduled(_controller, env, _ctx) {
@@ -48,6 +53,11 @@ export default {
 async function route(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
+
+    if (CONNECT_PATHS.includes(path)) {
+      // _headers on /connect.html adds X-Robots-Tag. Serve the file for /connect and /connect/ too.
+      return env.ASSETS.fetch(new Request(new URL('/connect.html', url.origin), request));
+    }
 
     if (RETIRED_TO_HOME.includes(path)) {
       return Response.redirect(new URL('/', url.origin).toString(), 301);
