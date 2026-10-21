@@ -14,6 +14,8 @@ Disallow: /research-products-private
 Disallow: /research-products-private.html
 Disallow: /fountain-life-private
 Disallow: /fountain-life-private.html
+Disallow: /peak-life-os-welcome
+Disallow: /peak-life-os-welcome.html
 Disallow: /connect
 Disallow: /connect/
 Disallow: /connect.html
