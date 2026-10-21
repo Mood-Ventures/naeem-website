@@ -794,7 +794,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
 <footer class="site-footer">
   <div class="container">
     <div class="site-footer__grid">
-      <span class="site-footer__copyright">&copy; Mood Ventures LLC | 2026</span>
+      <span class="site-footer__copyright">&copy; 2026 Peak Humans</span>
       <div class="site-footer__links">
         <a href="/peakhuman/">Peak Human Protocol</a>
         <a href="/podcast">Podcast</a>
@@ -1626,7 +1626,7 @@ function podcastPage(episodes) {
 <footer class="site-footer">
   <div class="container">
     <div class="site-footer__grid">
-      <span class="site-footer__copyright">&copy; Mood Ventures LLC | 2026</span>
+      <span class="site-footer__copyright">&copy; 2026 Peak Humans</span>
       <div class="site-footer__links">
         <a href="/peakhuman/">Peak Human Protocol</a>
         <a href="/podcast">Podcast</a>
