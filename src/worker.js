@@ -474,7 +474,7 @@ function staticPostCard(post) {
       <h3>${escapeHtml(post.title)}</h3>
       ${date ? `<p class="post-card__date">${escapeHtml(date)}</p>` : ''}
       <p class="post-card__excerpt">${escapeHtml(post.excerpt)}</p>
-      <span class="post-card__cta">Read more &rarr;</span>
+      <span class="post-card__cta">Read more</span>
     </a>
   </article>`;
 }
@@ -496,7 +496,7 @@ function nativePostCard(post) {
       <h3>${escapeHtml(post.title)}</h3>
       <p class="post-card__date">${escapeHtml(formatDate(post.published_at))}</p>
       ${excerpt ? `<p class="post-card__excerpt">${escapeHtml(excerpt)}${more}</p>` : ''}
-      <span class="post-card__cta">Read more &rarr;</span>
+      <span class="post-card__cta">Read more</span>
     </a>
   </article>`;
 }
