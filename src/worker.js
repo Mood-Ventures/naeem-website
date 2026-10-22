@@ -760,6 +760,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
       <a class="nav__link" href="/podcast">Podcast</a>
       <a class="nav__link" href="/about">About</a>
       <a class="nav__link" href="/books">Books</a>
+      <a class="nav__link" href="/peak-life-os">Peak Life OS</a>
       <a class="nav__link" href="/blog">Blog</a>
       <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
     </div>
@@ -771,6 +772,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
     <a class="nav__link" href="/podcast">Podcast</a>
     <a class="nav__link" href="/about">About</a>
     <a class="nav__link" href="/books">Books</a>
+      <a class="nav__link" href="/peak-life-os">Peak Life OS</a>
     <a class="nav__link" href="/blog">Blog</a>
     <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
   </div>
@@ -1571,6 +1573,7 @@ function podcastPage(episodes) {
       <a class="nav__link" href="/podcast">Podcast</a>
       <a class="nav__link" href="/about.html">About</a>
       <a class="nav__link" href="/books.html">Books</a>
+      <a class="nav__link" href="/peak-life-os">Peak Life OS</a>
       <a class="nav__link" href="/blog">Blog</a>
       <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
     </div>
@@ -1582,6 +1585,7 @@ function podcastPage(episodes) {
     <a class="nav__link" href="/podcast">Podcast</a>
     <a class="nav__link" href="/about.html">About</a>
     <a class="nav__link" href="/books.html">Books</a>
+      <a class="nav__link" href="/peak-life-os">Peak Life OS</a>
     <a class="nav__link" href="/blog">Blog</a>
     <a class="btn btn--primary btn--small" href="https://tidycal.com/peakhumans/peakhuman-protocol-30" target="_blank" rel="noopener noreferrer">Apply for Coaching</a>
   </div>
