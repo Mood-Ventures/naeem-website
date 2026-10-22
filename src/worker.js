@@ -28,6 +28,8 @@ const CONNECT_PATHS = ['/connect', '/connect/', '/connect.html'];
 const RETIRED_TO_HOME = [
   '/daily', '/daily/', '/daily.html',
   '/supermood-invitation', '/supermood-invitation/', '/supermood-invitation.html',
+  '/peak-human-os', '/peak-human-os/', '/peak-human-os.html',
+  '/peakhumanos', '/peakhumanos/', '/peak-human-os/index.html',
 ];
 
 // Native duplicate of the Substack import. Keep the -cc8 slug: the hourly
@@ -59,7 +61,7 @@ async function route(request, env) {
       return env.ASSETS.fetch(new Request(new URL('/connect.html', url.origin), request));
     }
 
-    if (RETIRED_TO_HOME.includes(path)) {
+    if (RETIRED_TO_HOME.includes(path) || RETIRED_TO_HOME.includes(path.toLowerCase())) {
       return Response.redirect(new URL('/', url.origin).toString(), 301);
     }
 
