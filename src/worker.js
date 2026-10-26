@@ -459,6 +459,14 @@ async function renderBlog(env) {
 // JSON-LD) rather than in D1. Listed above the D1 posts on /blog.
 const STATIC_POSTS = [
   {
+    href: '/what-is-synaptic-pruning',
+    title: "What Is Synaptic Pruning? How Your Brain Lets Go of What You Don't Use",
+    date: '2026-10-26',
+    excerpt: 'What is synaptic pruning? A plain-language guide to how your brain trims unused connections, what it means for adults, and how to use it to change habits.',
+    thumb: 'https://naeemmood.com/assets/img/og-what-is-synaptic-pruning.png',
+    alt: "What is synaptic pruning? How your brain lets go of what you don't use.",
+  },
+  {
     href: '/what-is-myelination',
     title: 'What Is Myelination? How Practice Shapes Your Brain',
     date: '2026-10-19',
