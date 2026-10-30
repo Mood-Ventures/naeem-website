@@ -2319,6 +2319,27 @@ section { padding: 5rem 0; }
   text-align: left;
 }
 .sacred-host p:last-child { margin: 0; }
+.sacred-host--lead {
+  border-color: rgba(255, 77, 141, 0.55);
+  box-shadow: 0 0 40px rgba(255, 77, 141, 0.08);
+  padding: 2.15rem 1.75rem 1.85rem;
+}
+.sacred-host--lead h3 {
+  font-size: clamp(1.85rem, 2.6vw, 2.25rem);
+}
+.sacred-guide {
+  margin: 1.25rem 0 0;
+  padding: 1.35rem 1.5rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  text-align: left;
+}
+.sacred-guide h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.35rem;
+  text-align: left;
+}
+.sacred-guide p:last-child { margin: 0; }
 
 .sacred-invest { padding: 5.5rem 0; }
 .sacred-prices {
@@ -2378,7 +2399,7 @@ section { padding: 5rem 0; }
     radial-gradient(ellipse 40% 50% at 50% 0%, rgba(232, 201, 138, 0.08), transparent 70%),
     var(--color-bg);
 }
-.sacred-close .sacred-lead { margin-bottom: 0.55rem; }
+.sacred-close .sacred-lead { margin-bottom: 1.75rem; }
 .sacred-close .sacred-lead a {
   color: var(--sacred-gold);
   font-weight: 600;
@@ -2427,6 +2448,10 @@ section { padding: 5rem 0; }
   .sacred-eclipse__grid { grid-template-columns: 1.05fr 0.95fr; gap: 3.5rem; }
   .sacred-split { grid-template-columns: 0.95fr 1.05fr; gap: 3.5rem; }
   .sacred-host-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .sacred-host-grid.sacred-host-grid--pair {
+    grid-template-columns: 1.45fr 0.85fr;
+    align-items: stretch;
+  }
   .sacred-prices { grid-template-columns: 1fr 1fr; }
   .sacred-experience__figure img { aspect-ratio: 5 / 4; }
 }
