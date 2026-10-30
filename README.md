@@ -14,6 +14,7 @@ Then open http://localhost:8843/public/
 
 - `index.html` — Home
 - `connect.html`: hidden contact card at `/connect` (business-card QR). Not in the nav, footer, or sitemap. `noindex, nofollow`.
+- `sacred-union-egypt-2027/`: unlisted couples retreat invitation. Not in the nav, footer, sitemap, or robots.txt. `noindex, nofollow`.
 - `work-with-me.html` — The SuperMood Standard
 - `speaking.html` — Keynote Speaking
 - `about.html` — About Naeem
