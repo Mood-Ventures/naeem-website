@@ -52,3 +52,11 @@
   X-Robots-Tag: noindex, nofollow
 /peakhuman/offer/index.html
   X-Robots-Tag: noindex, nofollow
+
+# Unlisted retreat. Header only. The path is not listed in robots.txt.
+/sacred-union-egypt-2027
+  X-Robots-Tag: noindex, nofollow
+/sacred-union-egypt-2027/
+  X-Robots-Tag: noindex, nofollow
+/sacred-union-egypt-2027/index.html
+  X-Robots-Tag: noindex, nofollow

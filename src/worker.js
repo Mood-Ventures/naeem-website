@@ -24,6 +24,14 @@ const RETIRED_TO_PROTOCOL = [
 // Hidden business-card contact page. Not linked from nav, footer, or sitemap.
 const CONNECT_PATHS = ['/connect', '/connect/', '/connect.html'];
 
+// Unlisted retreat invitation. Not linked from nav, footer, or sitemap.
+// Kept off robots.txt so the path is not published there. noindex is on the page.
+const RETREAT_PATHS = [
+  '/sacred-union-egypt-2027',
+  '/sacred-union-egypt-2027/',
+  '/sacred-union-egypt-2027/index.html',
+];
+
 // Retired inactive pages that now redirect to the homepage.
 const RETIRED_TO_HOME = [
   '/daily', '/daily/', '/daily.html',
@@ -42,8 +50,8 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/api/subscribe') return handleSubscribe(request, env);
     const response = await route(request, env);
-    // The contact card is a QR landing. Skip the protocol opt-in on it.
-    if (CONNECT_PATHS.includes(url.pathname)) return response;
+    // Quiet landings. Skip the protocol opt-in on the contact card and the retreat invitation.
+    if (CONNECT_PATHS.includes(url.pathname) || RETREAT_PATHS.includes(url.pathname)) return response;
     return injectGiftPopup(response);
   },
 
