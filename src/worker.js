@@ -467,6 +467,14 @@ async function renderBlog(env) {
 // JSON-LD) rather than in D1. Listed above the D1 posts on /blog.
 const STATIC_POSTS = [
   {
+    href: '/sales-trainer-influence',
+    title: "What a Great Sales Trainer Teaches About Influence That Scripts Never Will",
+    date: '2026-11-02',
+    excerpt: 'Influence in sales starts before you speak. A sales trainer on how state, questions, frames and beliefs shape every buying decision, and how to practice them.',
+    thumb: 'https://naeemmood.com/assets/img/og-sales-trainer-influence.png',
+    alt: 'What a great sales trainer teaches about influence that scripts never will.',
+  },
+  {
     href: '/what-is-synaptic-pruning',
     title: "What Is Synaptic Pruning? How Your Brain Lets Go of What You Don't Use",
     date: '2026-10-26',
