@@ -467,6 +467,14 @@ async function renderBlog(env) {
 // JSON-LD) rather than in D1. Listed above the D1 posts on /blog.
 const STATIC_POSTS = [
   {
+    href: '/train-your-mind-like-your-body',
+    title: 'Train Your Mind Like Your Body: How High Performers Build Mind Strength',
+    date: '2026-11-09',
+    excerpt: 'High performers train their bodies and their craft on purpose. Mind strength works the same way: own what you can control, start the reps now, and practice before the high-stakes moment.',
+    thumb: 'https://naeemmood.com/assets/img/og-train-your-mind-like-your-body.png',
+    alt: 'Train Your Mind Like Your Body: How High Performers Build Mind Strength',
+  },
+  {
     href: '/sales-trainer-influence',
     title: "What a Great Sales Trainer Teaches About Influence That Scripts Never Will",
     date: '2026-11-02',
