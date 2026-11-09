@@ -498,6 +498,38 @@ const STATIC_POSTS = [
     thumb: 'https://naeemmood.com/assets/img/og-what-is-myelination.png',
     alt: 'What is myelination? Myelin, the insulation that makes practice stick.',
   },
+  {
+    href: '/jackson-hightower-biological-behavioral-mastery',
+    title: 'Biological and Behavioral Mastery for High Performers with Jackson Hightower',
+    date: '2026-05-01',
+    excerpt: 'Jackson Hightower on biological optimization, behavioral mastery, and why ambition stalls without the right data and direction.',
+    thumb: 'https://naeemmood.com/assets/img/og-jackson-hightower-biological-behavioral-mastery.png',
+    alt: 'Biological and Behavioral Mastery for High Performers with Jackson Hightower',
+  },
+  {
+    href: '/jairek-robbins-beyond-the-bottleneck',
+    title: 'Beyond the Bottleneck with Jairek Robbins',
+    date: '2026-04-21',
+    excerpt: 'Jairek Robbins on the bottleneck founders create, and why peak performance depends on where a leader spends time and energy.',
+    thumb: 'https://naeemmood.com/assets/img/og-jairek-robbins-beyond-the-bottleneck.png',
+    alt: 'Beyond the Bottleneck with Jairek Robbins',
+  },
+  {
+    href: '/salim-najjar-art-of-the-heart',
+    title: 'The Art of the Heart with Salim Najjar',
+    date: '2025-12-17',
+    excerpt: 'Salim Najjar, That HRV Guy, on heart rate variability as a signal for recovery, performance, and emotional regulation.',
+    thumb: 'https://naeemmood.com/assets/img/og-salim-najjar-art-of-the-heart.png',
+    alt: 'The Art of the Heart with Salim Najjar',
+  },
+  {
+    href: '/christian-mickelsen-from-welfare-to-wealth',
+    title: 'From Welfare to Wealth with Christian Mickelsen',
+    date: '2025-07-04',
+    excerpt: 'Christian Mickelsen on coaching, getting clients, and building a business that moves people from scarcity to contribution.',
+    thumb: 'https://naeemmood.com/assets/img/og-christian-mickelsen-from-welfare-to-wealth.png',
+    alt: 'From Welfare to Wealth with Christian Mickelsen',
+  },
 ];
 
 function staticPostCard(post) {
@@ -790,6 +822,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
       <a class="nav__link" href="/speaking">Speaking</a>
       <a class="nav__link" href="/peakhuman/">Peak Human Protocol</a>
       <a class="nav__link" href="/podcast">Podcast</a>
+      <a class="nav__link" href="/media">Media</a>
       <a class="nav__link" href="/about">About</a>
       <a class="nav__link" href="/books">Books</a>
       <a class="nav__link" href="/blog">Blog</a>
@@ -801,6 +834,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
     <a class="nav__link" href="/speaking">Speaking</a>
     <a class="nav__link" href="/peakhuman/">Peak Human Protocol</a>
     <a class="nav__link" href="/podcast">Podcast</a>
+    <a class="nav__link" href="/media">Media</a>
     <a class="nav__link" href="/about">About</a>
     <a class="nav__link" href="/books">Books</a>
     <a class="nav__link" href="/blog">Blog</a>
@@ -832,6 +866,7 @@ ${options.canonical && /^https?:\/\//i.test(options.canonical) ? `<link rel="can
       <div class="site-footer__links">
         <a href="/peakhuman/">Peak Human Protocol</a>
         <a href="/podcast">Podcast</a>
+        <a href="/media">Media</a>
         <a href="/about">About</a>
         <a href="/speaking">Speaking</a>
         <a href="/books">Books</a>
@@ -911,7 +946,7 @@ const INTERVIEW_OVERRIDES = {
 
 // The page shell is cached separately from the feeds. Bump this when the
 // shell or the episode filter changes, or a deploy keeps serving the previous HTML.
-const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=interviews&v=cta2';
+const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=interviews&v=media-guests1';
 
 async function renderPodcast(request) {
   const cache = podcastCache();
@@ -1601,6 +1636,7 @@ function podcastPage(episodes) {
       <a class="nav__link" href="/speaking.html">Speaking</a>
       <a class="nav__link" href="/peakhuman/">Peak Human Protocol</a>
       <a class="nav__link" href="/podcast">Podcast</a>
+      <a class="nav__link" href="/media">Media</a>
       <a class="nav__link" href="/about.html">About</a>
       <a class="nav__link" href="/books.html">Books</a>
       <a class="nav__link" href="/blog">Blog</a>
@@ -1612,6 +1648,7 @@ function podcastPage(episodes) {
     <a class="nav__link" href="/speaking.html">Speaking</a>
     <a class="nav__link" href="/peakhuman/">Peak Human Protocol</a>
     <a class="nav__link" href="/podcast">Podcast</a>
+    <a class="nav__link" href="/media">Media</a>
     <a class="nav__link" href="/about.html">About</a>
     <a class="nav__link" href="/books.html">Books</a>
     <a class="nav__link" href="/blog">Blog</a>
@@ -1636,6 +1673,7 @@ function podcastPage(episodes) {
         <a class="btn btn--primary" href="${APPLE_PODCAST_URL}" target="_blank" rel="noopener">Listen on Apple Podcasts</a>
         <a class="btn btn--primary" href="${SPOTIFY_SHOW_URL}" target="_blank" rel="noopener">Listen on Spotify</a>
       </div>
+      <p class="podcast-more"><a href="/podcast/guests">Featured guests</a></p>
     </div>
   </section>
 
@@ -1664,6 +1702,7 @@ function podcastPage(episodes) {
       <div class="site-footer__links">
         <a href="/peakhuman/">Peak Human Protocol</a>
         <a href="/podcast">Podcast</a>
+        <a href="/media">Media</a>
         <a href="/about.html">About</a>
         <a href="/speaking.html">Speaking</a>
         <a href="/books.html">Books</a>
