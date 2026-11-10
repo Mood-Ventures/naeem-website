@@ -2668,20 +2668,6 @@ section { padding: 5rem 0; }
 }
 .episode-byline a:hover { color: var(--color-accent); }
 .episode-top .post-body > h2:first-child { margin-top: 0.15rem; }
-.episode-audio__art--wide,
-.post-body .episode-audio__art--wide {
-  width: 168px;
-  height: 94px;
-  max-width: 168px;
-}
-@media (min-width: 700px) {
-  .episode-audio__art--wide,
-  .post-body .episode-audio__art--wide {
-    width: 240px;
-    height: 135px;
-    max-width: 240px;
-  }
-}
 .apple-embed { margin: 0.35rem 0 1.5rem; max-width: 660px; }
 .episode-audio {
   display: flex;
