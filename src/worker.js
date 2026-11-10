@@ -530,6 +530,14 @@ const STATIC_POSTS = [
     thumb: 'https://naeemmood.com/assets/img/episodes/christian-mickelsen.jpg',
     alt: 'From Welfare to Wealth with Christian Mickelsen',
   },
+  {
+    href: '/high-profit-event-show-rudy-rodriguez',
+    title: 'Maximizing Event Impact with Rudy Rodriguez',
+    date: '2024-08',
+    excerpt: 'Naeem on The High Profit Event Show with Rudy Rodriguez: emotional state, serving first, and keeping a room engaged.',
+    thumb: 'https://naeemmood.com/assets/img/episodes/high-profit-event-show-rudy-rodriguez.jpg',
+    alt: 'Maximizing Event Impact with Naeem Mahmood on The High Profit Event Show',
+  },
 ];
 
 function staticPostCard(post) {

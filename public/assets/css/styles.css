@@ -2630,6 +2630,44 @@ section { padding: 5rem 0; }
   text-transform: uppercase;
   margin: 0 0 1.25rem;
 }
+.episode-top { padding-top: 2.75rem; }
+.episode-header { text-align: left; margin: 0 0 1.5rem; }
+.episode-header h1 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  margin: 0 0 0.85rem;
+  text-align: left;
+  line-height: 1.12;
+}
+.episode-title {
+  font-size: clamp(2.15rem, 4.8vw, 3.4rem);
+  color: var(--color-white);
+}
+.episode-guest {
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  color: var(--color-accent);
+}
+.episode-byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.85rem;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-align: left;
+  text-transform: none;
+}
+.episode-byline a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+.episode-byline a:hover { color: var(--color-accent); }
+.episode-top .post-body > h2:first-child { margin-top: 0.15rem; }
 .apple-embed { margin: 0.35rem 0 1.5rem; max-width: 660px; }
 .episode-audio {
   display: flex;
