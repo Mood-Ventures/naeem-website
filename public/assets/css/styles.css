@@ -2746,6 +2746,28 @@ section { padding: 5rem 0; }
     max-width: 96px;
   }
 }
+.episode-audio__art.episode-audio__art--wide,
+.post-body .episode-audio__art.episode-audio__art--wide {
+  width: 168px;
+  height: 94px;
+  max-width: 168px;
+}
+@media (min-width: 700px) {
+  .episode-audio__art.episode-audio__art--wide,
+  .post-body .episode-audio__art.episode-audio__art--wide {
+    width: 240px;
+    height: 135px;
+    max-width: 240px;
+  }
+}
+@media (max-width: 420px) {
+  .episode-audio__art.episode-audio__art--wide,
+  .post-body .episode-audio__art.episode-audio__art--wide {
+    width: 148px;
+    height: 83px;
+    max-width: 148px;
+  }
+}
 .post-body .apple-embed iframe {
   display: block;
   width: 100%;

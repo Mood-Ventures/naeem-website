@@ -530,6 +530,14 @@ const STATIC_POSTS = [
     thumb: 'https://naeemmood.com/assets/img/episodes/christian-mickelsen.jpg',
     alt: 'From Welfare to Wealth with Christian Mickelsen',
   },
+  {
+    href: '/rudy-rodriguez-navy-veteran-sales-coach',
+    title: 'Insights from a Navy Veteran Turned Sales Coach with Rudy Rodriguez',
+    date: '2024-10-02',
+    excerpt: 'Rudy Rodriguez, a former Navy aviator turned sales coach, on the move into entrepreneurship, integrity, and peer groups.',
+    thumb: 'https://naeemmood.com/assets/img/episodes/rudy-rodriguez-navy-veteran-sales-coach.jpg',
+    alt: 'Naeem Mahmood and Rudy Rodriguez, Insights from a Navy Veteran Turned Sales Coach',
+  },
 ];
 
 function staticPostCard(post) {
