@@ -503,7 +503,7 @@ const STATIC_POSTS = [
     title: 'Biological and Behavioral Mastery for High Performers with Jackson Hightower',
     date: '2026-05-01',
     excerpt: 'Jackson Hightower on biological optimization, behavioral mastery, and why ambition stalls without the right data and direction.',
-    thumb: 'https://naeemmood.com/assets/img/og-jackson-hightower-biological-behavioral-mastery.png',
+    thumb: 'https://naeemmood.com/assets/img/episodes/jackson-hightower.jpg',
     alt: 'Biological and Behavioral Mastery for High Performers with Jackson Hightower',
   },
   {
@@ -511,7 +511,7 @@ const STATIC_POSTS = [
     title: 'Beyond the Bottleneck with Jairek Robbins',
     date: '2026-04-21',
     excerpt: 'Jairek Robbins on the bottleneck founders create, and why peak performance depends on where a leader spends time and energy.',
-    thumb: 'https://naeemmood.com/assets/img/og-jairek-robbins-beyond-the-bottleneck.png',
+    thumb: 'https://naeemmood.com/assets/img/episodes/jairek-robbins.jpg',
     alt: 'Beyond the Bottleneck with Jairek Robbins',
   },
   {
@@ -519,7 +519,7 @@ const STATIC_POSTS = [
     title: 'The Art of the Heart with Salim Najjar',
     date: '2025-12-17',
     excerpt: 'Salim Najjar, That HRV Guy, on heart rate variability as a signal for recovery, performance, and emotional regulation.',
-    thumb: 'https://naeemmood.com/assets/img/og-salim-najjar-art-of-the-heart.png',
+    thumb: 'https://naeemmood.com/assets/img/episodes/salim-najjar.jpg',
     alt: 'The Art of the Heart with Salim Najjar',
   },
   {
@@ -527,7 +527,7 @@ const STATIC_POSTS = [
     title: 'From Welfare to Wealth with Christian Mickelsen',
     date: '2025-07-04',
     excerpt: 'Christian Mickelsen on coaching, getting clients, and building a business that moves people from scarcity to contribution.',
-    thumb: 'https://naeemmood.com/assets/img/og-christian-mickelsen-from-welfare-to-wealth.png',
+    thumb: 'https://naeemmood.com/assets/img/episodes/christian-mickelsen.jpg',
     alt: 'From Welfare to Wealth with Christian Mickelsen',
   },
 ];

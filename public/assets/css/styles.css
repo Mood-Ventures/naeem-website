@@ -2641,6 +2641,36 @@ section { padding: 5rem 0; }
   border-radius: 12px;
   background: transparent;
 }
+.post-body .video-embed.episode-youtube {
+  margin: 0.25rem 0 1rem;
+  max-width: 100%;
+}
+.post-body .video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+.guest-card { padding: 0 0 1.15rem; overflow: hidden; }
+.guest-card__photo-link { display: block; }
+.guest-card__photo {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 0;
+  margin: 0 0 1rem;
+}
+.guest-card h3,
+.guest-card .guest-card__episode,
+.guest-card p,
+.guest-card .guest-card__links {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
 @media (min-width: 800px) {
   .guest-grid { grid-template-columns: 1fr 1fr; }
   .bio-layout { grid-template-columns: 160px 1fr; }
