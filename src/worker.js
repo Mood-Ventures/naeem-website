@@ -467,6 +467,14 @@ async function renderBlog(env) {
 // JSON-LD) rather than in D1. Listed above the D1 posts on /blog.
 const STATIC_POSTS = [
   {
+    href: '/what-a-high-performance-coach-works-on',
+    title: 'What a High Performance Coach Actually Works On (And Why It Starts in the Nervous System)',
+    date: '2026-11-16',
+    excerpt: 'A high performance coach helps leaders perform under pressure. Here is what that work looks like: state, language, questions and the beliefs underneath.',
+    thumb: 'https://naeemmood.com/assets/img/og-what-a-high-performance-coach-works-on.png',
+    alt: 'What a High Performance Coach Actually Works On (And Why It Starts in the Nervous System)',
+  },
+  {
     href: '/train-your-mind-like-your-body',
     title: 'Train Your Mind Like Your Body: How High Performers Build Mind Strength',
     date: '2026-11-09',
