@@ -103,6 +103,15 @@ async function route(request, env) {
       return Response.redirect(new URL(DUPLICATE_KEPT_BLOG_PATH, url.origin).toString(), 301);
     }
 
+    // Rudy's guest post moved from "veteran" to "pilot" in the slug.
+    if (
+      path === '/rudy-rodriguez-navy-veteran-sales-coach' ||
+      path === '/rudy-rodriguez-navy-veteran-sales-coach/' ||
+      path === '/rudy-rodriguez-navy-veteran-sales-coach.html'
+    ) {
+      return Response.redirect(new URL('/rudy-rodriguez-navy-pilot-sales-coach', url.origin).toString(), 301);
+    }
+
     // Directory indexes, served with or without a trailing slash.
     if (path === '/peakhuman' || path === '/peakhuman/') {
       return env.ASSETS.fetch(new Request(new URL('/peakhuman/index.html', url.origin), request));
@@ -547,12 +556,12 @@ const STATIC_POSTS = [
     alt: "Naeem Mahmood and Scott Page, It's All About The Ride",
   },
   {
-    href: '/rudy-rodriguez-navy-veteran-sales-coach',
-    title: 'Insights from a Navy Veteran Turned Sales Coach with Rudy Rodriguez',
+    href: '/rudy-rodriguez-navy-pilot-sales-coach',
+    title: 'Insights from a Navy Pilot Turned Sales Coach with Rudy Rodriguez',
     date: '2024-10-02',
     excerpt: 'Rudy Rodriguez, a former Navy aviator turned sales coach, on the move into entrepreneurship, integrity, and peer groups.',
-    thumb: 'https://naeemmood.com/assets/img/episodes/rudy-rodriguez-navy-veteran-sales-coach.jpg',
-    alt: 'Naeem Mahmood and Rudy Rodriguez, Insights from a Navy Veteran Turned Sales Coach',
+    thumb: 'https://naeemmood.com/assets/img/episodes/rudy-rodriguez-navy-pilot-sales-coach.jpg',
+    alt: 'Naeem Mahmood and Rudy Rodriguez, Insights from a Navy Pilot Turned Sales Coach',
   },
   {
     href: '/what-are-you-leaving-on-the-table-kristen-holmes',
@@ -986,7 +995,7 @@ const INTERVIEW_OVERRIDES = {
 
 // The page shell is cached separately from the feeds. Bump this when the
 // shell or the episode filter changes, or a deploy keeps serving the previous HTML.
-const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=interviews&v=media-guests1';
+const PODCAST_PAGE_CACHE_KEY = '/podcast?shell=interviews&v=rudy-pilot1';
 
 async function renderPodcast(request) {
   const cache = podcastCache();
@@ -1766,13 +1775,24 @@ function podcastPage(episodes) {
   return body;
 }
 
+function shownEpisodeCopy(text) {
+  return String(text || '')
+    .replaceAll('Navy Veteran', 'Navy Pilot')
+    .replaceAll('Navy veteran', 'Navy pilot');
+}
+
 function episodeCard(episode) {
-  const title = escapeHtml(episode.title);
-  const date = episode.dateLabel ? `<p class="episode-card__date">${escapeHtml(episode.dateLabel)}</p>` : '';
-  const description = episode.description ? `<p class="episode-card__desc">${escapeHtml(episode.description)}</p>` : '';
-  const media = episode.youtubeId
-    ? youtubeEmbed(episode)
-    : audioArt(episode);
+  const shown = {
+    ...episode,
+    title: shownEpisodeCopy(episode.title),
+    description: shownEpisodeCopy(episode.description),
+  };
+  const title = escapeHtml(shown.title);
+  const date = shown.dateLabel ? `<p class="episode-card__date">${escapeHtml(shown.dateLabel)}</p>` : '';
+  const description = shown.description ? `<p class="episode-card__desc">${escapeHtml(shown.description)}</p>` : '';
+  const media = shown.youtubeId
+    ? youtubeEmbed(shown)
+    : audioArt(shown);
   const audio = !episode.youtubeId && episode.audioUrl
     ? `<a class="episode-card__audio" href="${escapeHtml(episode.audioUrl)}" target="_blank" rel="noopener">${episode.spotifyUrl ? 'Listen on Spotify' : 'Play audio'}</a>`
     : '';
