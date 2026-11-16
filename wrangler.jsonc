@@ -10,7 +10,14 @@
     "directory": "public",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/podcast", "/podcast/", "/podcast.html"]
+    "run_worker_first": [
+      "/podcast",
+      "/podcast/",
+      "/podcast.html",
+      "/rudy-rodriguez-navy-veteran-sales-coach",
+      "/rudy-rodriguez-navy-veteran-sales-coach/",
+      "/rudy-rodriguez-navy-veteran-sales-coach.html"
+    ]
   },
   "d1_databases": [
     {
