@@ -476,6 +476,14 @@ async function renderBlog(env) {
 // JSON-LD) rather than in D1. Listed above the D1 posts on /blog.
 const STATIC_POSTS = [
   {
+    href: '/nervous-system-regulation',
+    title: 'Nervous System Regulation: How High Performers Stay Clear Under Pressure',
+    date: '2026-11-23',
+    excerpt: 'Your nervous system decides which habit shows up under pressure. Here is how regulation, the window of tolerance, and seven simple practices help high performers stay clear.',
+    thumb: 'https://naeemmood.com/assets/img/og-nervous-system-regulation.png',
+    alt: 'Nervous System Regulation: How High Performers Stay Clear Under Pressure',
+  },
+  {
     href: '/what-a-high-performance-coach-works-on',
     title: 'What a High Performance Coach Actually Works On (And Why It Starts in the Nervous System)',
     date: '2026-11-16',
