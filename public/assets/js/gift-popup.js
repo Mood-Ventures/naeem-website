@@ -5,6 +5,8 @@
   if (window.__phGiftPopup) return;
   window.__phGiftPopup = true;
   if (location.pathname.indexOf('/admin') === 0) return;
+  var startPath = location.pathname.replace(/\/+$/, '') || '/';
+  if (startPath === '/start' || startPath === '/start.html') return;
 
   var SUB_KEY = 'ph-daily-protocol-subscribed';
   var DISMISS_KEY = 'ph-daily-protocol-dismissed';
