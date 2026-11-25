@@ -5,8 +5,10 @@
 // when the last successful run is stale. Every other request falls through
 // to static assets.
 // POST /api/subscribe and the gift pop-up live in ./subscribe.js.
+// POST /api/lead stores Peak Wheel submissions in D1.
 
 import { handleSubscribe, injectGiftPopup } from './subscribe.js';
+import { handleLead } from './lead.js';
 
 const FEED_URL = 'https://nmood.substack.com/feed';
 const IMPORT_META_KEY = 'last_substack_import';
@@ -23,6 +25,9 @@ const RETIRED_TO_PROTOCOL = [
 
 // Hidden business-card contact page. Not linked from nav, footer, or sitemap.
 const CONNECT_PATHS = ['/connect', '/connect/', '/connect.html'];
+
+// Standalone Peak Wheel landing. Skip the protocol opt-in so it does not cover the assessment.
+const START_PATHS = ['/start', '/start/', '/start.html'];
 
 // Unlisted retreat invitation. Not linked from nav, footer, or sitemap.
 // Kept off robots.txt so the path is not published there. noindex is on the page.
@@ -49,9 +54,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/api/subscribe') return handleSubscribe(request, env);
+    if (url.pathname === '/api/lead') return handleLead(request, env);
     const response = await route(request, env);
-    // Quiet landings. Skip the protocol opt-in on the contact card and the retreat invitation.
-    if (CONNECT_PATHS.includes(url.pathname) || RETREAT_PATHS.includes(url.pathname)) return response;
+    // Quiet landings. Skip the protocol opt-in on the contact card, the retreat invitation, and /start.
+    if (CONNECT_PATHS.includes(url.pathname) || RETREAT_PATHS.includes(url.pathname) || START_PATHS.includes(url.pathname)) return response;
     return injectGiftPopup(response);
   },
 
@@ -60,9 +66,25 @@ export default {
   },
 };
 
+function leadConfigScript(request, env) {
+  const endpoint = typeof env.LEAD_ENDPOINT === 'string' ? env.LEAD_ENDPOINT.trim() : '';
+  if (!endpoint) return env.ASSETS.fetch(request);
+  return new Response('window.LEAD_ENDPOINT=' + JSON.stringify(endpoint) + ';\n', {
+    headers: {
+      'content-type': 'application/javascript; charset=utf-8',
+      'cache-control': 'no-store',
+      'x-content-type-options': 'nosniff',
+    },
+  });
+}
+
 async function route(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
+
+    if (path === '/assets/js/lead-config.js') {
+      return leadConfigScript(request, env);
+    }
 
     if (CONNECT_PATHS.includes(path)) {
       // _headers on /connect.html adds X-Robots-Tag. Serve the file for /connect and /connect/ too.

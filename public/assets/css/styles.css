@@ -1459,6 +1459,17 @@ section { padding: 5rem 0; }
   flex-wrap: wrap;
   gap: 0.85rem;
 }
+.home-score {
+  margin: 1.05rem 0 0;
+}
+.home-score a {
+  color: var(--color-accent);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+.home-score a:hover { color: var(--color-white); }
 .home-ctas--center { justify-content: center; }
 .home-hero__photo {
   position: relative;
