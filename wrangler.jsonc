@@ -27,7 +27,18 @@
       "database_id": "c6e9e12a-6681-45d1-af84-2ef6cf62c927",
       "migrations_dir": "migrations"
     }
-  ]
+  ],
+  // Branch previews (`npx wrangler preview`) do not inherit D1 bindings.
+  // This database is empty of posts and is not the production blog.
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "BLOG_DB",
+        "database_name": "supermood-blog-preview",
+        "database_id": "547288e6-1487-4cbc-b61d-b7dcb73e8462"
+      }
+    ]
+  }
   // KIT_API_KEY is a Worker secret (`wrangler secret put KIT_API_KEY`). Never commit it.
   // LEAD_ENDPOINT is an optional Worker variable. When set, /assets/js/lead-config.js
   // serves that URL for the /start Peak Wheel POST. Leave it unset to use the
