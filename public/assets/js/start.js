@@ -1,56 +1,58 @@
 (function () {
-  var STORAGE_KEY = 'ph-peak-wheel-v1';
+  var STORAGE_KEY = 'ph-peak-wheel-v2';
 
-  // No Peak Wheel category list exists in this repo. These eight are the
-  // fallback set and need Naeem's confirmation before they are treated as canonical.
+  // Peak Humans Gap Map life areas, in Naeem's order.
+  // Tribe is friends, peer group, and community.
+  // Mission is purpose and work that matters.
+  // Impact and Joy is contribution, fun, and celebration.
   var AREAS = [
     {
-      id: 'business-wealth',
-      label: 'Business and Wealth',
-      followup: 'What would move the business or your wealth forward?',
-      cost: 'A gap here usually shows up as revenue, pricing, or wealth that stays flat while the calendar stays full. The business works harder than it compounds.'
+      id: 'body',
+      label: 'Body',
+      followup: 'What would raise how your body feels and performs?',
+      cost: 'A gap here usually costs how you feel and perform in your body. Strength, health, and recovery sit below your standard, and that shows up in how you carry the day.'
     },
     {
-      id: 'health-energy',
-      label: 'Health and Energy',
-      followup: 'What is one change that would raise your energy?',
-      cost: 'A gap here usually costs presence. You still show up, and the energy in the room is lower than the standard you want.'
-    },
-    {
-      id: 'mind-emotions',
-      label: 'Mind and Emotions',
+      id: 'mind',
+      label: 'Mind',
       followup: 'What tends to pull you out of a clear head?',
-      cost: 'A gap here usually costs clarity. Mood and mental noise leak into leadership, and the next hard call gets delayed or forced.'
+      cost: 'A gap here usually costs clarity. Mental noise leaks into decisions and leadership, and the next hard call gets delayed or forced.'
     },
     {
-      id: 'relationships-love',
-      label: 'Relationships and Love',
+      id: 'love',
+      label: 'Love',
       followup: 'Who needs more of you than they are getting?',
-      cost: 'A gap here usually costs the relationships that make a big life worth building. The people closest to you get what is left after the business.'
+      cost: 'A gap here usually costs the relationship closest to you. Love gets what is left after the business, and the bond that makes a big life worth building thins out.'
     },
     {
-      id: 'leadership-influence',
-      label: 'Leadership and Influence',
-      followup: 'Where is your influence not landing the way you want?',
-      cost: 'A gap here usually costs follow-through from other people. The standard stays in your head, and the team or the room does not move with you.'
+      id: 'tribe',
+      label: 'Tribe',
+      followup: 'Where does your circle fall short of the level you want around you?',
+      cost: 'A gap here usually costs the people you rise with. Friends, your peer group, and your community stay behind the level you are playing at, so the big calls get made with too few people beside you.'
     },
     {
-      id: 'time-focus',
-      label: 'Time and Focus',
-      followup: 'What keeps taking the hours that matter?',
-      cost: 'A gap here usually costs the few moves that actually grow the business. Hours go to noise, and the deep work keeps getting pushed.'
+      id: 'mission',
+      label: 'Mission',
+      followup: 'What would make the work feel like it matters?',
+      cost: 'A gap here usually costs the sense that the work matters. The business can keep moving and stop feeling like your mission, so performance turns into maintenance.'
     },
     {
-      id: 'purpose-fulfillment',
-      label: 'Purpose and Fulfillment',
-      followup: 'What would make the work feel like yours again?',
-      cost: 'A gap here usually costs drive. The wins can keep coming and mean less, so performance turns into maintenance.'
+      id: 'wealth',
+      label: 'Wealth',
+      followup: 'What would move your wealth forward?',
+      cost: 'A gap here usually shows up as wealth that stays flat while the calendar stays full. What you earn, price, and keep does not compound.'
     },
     {
-      id: 'fun-adventure',
-      label: 'Fun and Adventure',
-      followup: 'What have you stopped making time for?',
-      cost: 'A gap here usually costs the spark. Life narrows to output, and the creativity and recovery that keep a leader sharp go quiet.'
+      id: 'time-energy',
+      label: 'Time and Energy',
+      followup: 'What keeps taking the hours and the energy that matter?',
+      cost: 'A gap here usually costs the few moves that actually grow the business. Hours and energy go to noise, and the work that matters keeps getting pushed.'
+    },
+    {
+      id: 'impact-joy',
+      label: 'Impact and Joy',
+      followup: 'What have you stopped contributing to, enjoying, or celebrating?',
+      cost: 'A gap here usually costs contribution and the joy of the life you are building. Fun, celebration, and the mark you leave on other people go quiet, and the days narrow to output.'
     }
   ];
 
