@@ -231,6 +231,14 @@ body.page-start h2 {
   border-color: var(--color-accent);
 }
 
+.pw-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .pw-error {
   min-height: 1.3rem;
   margin: 0.85rem 0 0;

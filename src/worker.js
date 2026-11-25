@@ -5,8 +5,10 @@
 // when the last successful run is stale. Every other request falls through
 // to static assets.
 // POST /api/subscribe and the gift pop-up live in ./subscribe.js.
+// POST /api/lead stores Peak Wheel submissions in D1.
 
 import { handleSubscribe, injectGiftPopup } from './subscribe.js';
+import { handleLead } from './lead.js';
 
 const FEED_URL = 'https://nmood.substack.com/feed';
 const IMPORT_META_KEY = 'last_substack_import';
@@ -52,6 +54,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/api/subscribe') return handleSubscribe(request, env);
+    if (url.pathname === '/api/lead') return handleLead(request, env);
     const response = await route(request, env);
     // Quiet landings. Skip the protocol opt-in on the contact card, the retreat invitation, and /start.
     if (CONNECT_PATHS.includes(url.pathname) || RETREAT_PATHS.includes(url.pathname) || START_PATHS.includes(url.pathname)) return response;

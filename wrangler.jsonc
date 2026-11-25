@@ -41,6 +41,5 @@
   }
   // KIT_API_KEY is a Worker secret (`wrangler secret put KIT_API_KEY`). Never commit it.
   // LEAD_ENDPOINT is an optional Worker variable. When set, /assets/js/lead-config.js
-  // serves that URL for the /start Peak Wheel POST. Leave it unset to use the
-  // empty default in public/assets/js/lead-config.js.
+  // serves that URL for the /start Peak Wheel POST. Leave it unset to use /api/lead.
 }

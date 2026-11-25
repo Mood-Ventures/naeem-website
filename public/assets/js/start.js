@@ -390,7 +390,8 @@
       gaps: biggestGaps(state.ratings),
       peakScore: peakScore(state.ratings),
       submittedAt: new Date().toISOString(),
-      source: 'start-peak-wheel'
+      source: 'start-peak-wheel',
+      company: document.getElementById('pw-company').value
     };
     postLead(payload).then(function () {
       button.disabled = false;
