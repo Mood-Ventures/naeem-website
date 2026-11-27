@@ -47,37 +47,43 @@
       <svg viewBox="0 0 200 200" focusable="false">
         <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(0,240,255,0.35)" stroke-width="1.5"></circle>
         <circle cx="100" cy="100" r="48" fill="none" stroke="rgba(0,240,255,0.22)" stroke-width="1"></circle>
-        <polygon points="100,30 149.5,50.5 170,100 149.5,149.5 100,170 50.5,149.5 30,100 50.5,50.5" fill="rgba(0,240,255,0.14)" stroke="#00f0ff" stroke-width="2"></polygon>
+        <polygon points="100,30 154.7,56.4 168.2,115.6 130.4,163.1 69.6,163.1 31.8,115.6 45.3,56.4" fill="rgba(0,240,255,0.14)" stroke="#00f0ff" stroke-width="2"></polygon>
         <line x1="100" y1="100" x2="100" y2="30" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
-        <line x1="100" y1="100" x2="170" y2="100" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
-        <line x1="100" y1="100" x2="100" y2="170" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
-        <line x1="100" y1="100" x2="30" y2="100" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
+        <line x1="100" y1="100" x2="154.7" y2="56.4" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
+        <line x1="100" y1="100" x2="168.2" y2="115.6" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
+        <line x1="100" y1="100" x2="130.4" y2="163.1" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
+        <line x1="100" y1="100" x2="69.6" y2="163.1" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
+        <line x1="100" y1="100" x2="31.8" y2="115.6" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
+        <line x1="100" y1="100" x2="45.3" y2="56.4" stroke="rgba(0,240,255,0.45)" stroke-width="1"></line>
         <circle cx="100" cy="100" r="5" fill="#00f0ff"></circle>
       </svg>
     </div>
     <p class="pw-kicker">Free 3-minute assessment</p>
     <h1>See where you are operating below your peak.</h1>
-    <p class="pw-lead">A Peak Wheel score for founders, CEOs, and <span class="pw-nowrap">high-performing</span> leaders. Rate eight areas of performance and influence. Then see your score and the two gaps that matter most.</p>
+    <p class="pw-lead">A Peak Wheel score for founders, CEOs, and <span class="pw-nowrap">high-performing</span> leaders. Rate seven areas of your life, from 0 to 10. Then see your score and the two gaps that matter most.</p>
     <button class="btn btn--solid" type="button" id="pw-start">Start the assessment</button>
     <p class="pw-fine">From Naeem Mahmood, founder of Peak Humans.</p>
   </section>
 
   <section id="pw-question" hidden>
-    <div class="pw-progress" id="pw-progress" role="progressbar" aria-valuemin="1" aria-valuemax="8" aria-valuenow="1" aria-label="Assessment progress">
+    <div class="pw-progress" id="pw-progress" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1" aria-label="Assessment progress">
       <span id="pw-bar"></span>
     </div>
-    <p class="pw-step" id="pw-step">Area 1 of 8</p>
+    <p class="pw-step" id="pw-step">Area 1 of 7</p>
     <form id="pw-qform">
-      <h2 id="pw-area">Body</h2>
+      <h2 id="pw-area">Physical Body</h2>
+      <p class="pw-hint" id="pw-hint">Health, energy, and vitality.</p>
+      <fieldset class="pw-choice" id="pw-choice" hidden></fieldset>
+      <p class="pw-error" id="pw-qerror" role="alert"></p>
       <p class="pw-prompt">Where are you operating in this area right now?</p>
       <p class="pw-value" id="pw-value">5</p>
-      <label class="pw-slider-label" for="pw-slider">Your rating, from 1 to 10</label>
-      <input class="pw-slider" id="pw-slider" type="range" min="1" max="10" step="1" value="5" aria-valuemin="1" aria-valuemax="10" aria-valuenow="5" aria-valuetext="5 out of 10">
+      <label class="pw-slider-label" for="pw-slider">Your rating, from 0 to 10</label>
+      <input class="pw-slider" id="pw-slider" type="range" min="0" max="10" step="1" value="5" aria-valuemin="0" aria-valuemax="10" aria-valuenow="5" aria-valuetext="5 out of 10">
       <div class="pw-ends">
-        <span>1<br>Well below your peak</span>
+        <span>0<br>Well below your peak</span>
         <span>10<br>At your peak</span>
       </div>
-      <label class="pw-field" for="pw-note"><span id="pw-follow-label">What would raise how your body feels and performs?</span> <span class="pw-opt">Optional</span>
+      <label class="pw-field" for="pw-note"><span id="pw-follow-label">What would help your body feel healthier and more alive?</span> <span class="pw-opt">Optional</span>
         <input id="pw-note" type="text" maxlength="180" autocomplete="off" placeholder="One line is enough">
       </label>
       <div class="pw-actions">
@@ -120,7 +126,7 @@
     <div class="pw-scorebox">
       <p class="pw-kicker">Peak Score</p>
       <p class="pw-scorebox__num"><span id="pw-peak">0</span><small>/ 10</small></p>
-      <p>Across eight areas of performance and influence.</p>
+      <p>Across seven areas of your life.</p>
     </div>
     <div class="pw-chart" id="pw-chart"></div>
     <p class="pw-chart-note">Area 1 is at the top. The numbers continue clockwise.</p>

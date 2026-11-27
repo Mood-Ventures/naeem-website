@@ -41,10 +41,18 @@ export async function handleLead(request, env) {
   if (!isValidEmail(email)) return json({ error: 'Enter a valid email address.' }, 400);
   if (phone && !isValidPhone(phone)) return json({ error: 'Enter a phone number, or leave it blank.' }, 400);
 
+  // Store scores exactly as submitted. Do not map keys or rewrite rows.
+  // Current quizzes send the seven Wheel of Life ids: physical-body,
+  // emotions-meaning, relationships, time, work-career-mission, finances,
+  // celebrate-contribute. work-career-mission may also include kind
+  // (job, career, or mission) and kindLabel.
+  // Older leads use the eight-area ids: body, mind, love, tribe, mission,
+  // wealth, time-energy, impact-joy. Both shapes are valid. Nothing here
+  // migrates or deletes existing rows.
   let scores = '';
   let gaps = '';
   try {
-    scores = JSON.stringify(payload.scores == null ? {} : payload.scores);
+    scores = JSON.stringify(normalizeScores(payload.scores));
     gaps = JSON.stringify(payload.gaps == null ? [] : payload.gaps);
   } catch {
     return json({ error: 'That request could not be read.' }, 400);
@@ -86,6 +94,18 @@ export async function handleLead(request, env) {
   }
 
   return json({ ok: true });
+}
+
+// Copy a score map without renaming keys. Current ids and the older eight-area
+// ids are both stored as sent. A non-object is stored as an empty map.
+function normalizeScores(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  const out = {};
+  for (const [key, entry] of Object.entries(value)) {
+    if (typeof key !== 'string' || !key) continue;
+    out[key] = entry;
+  }
+  return out;
 }
 
 function json(body, status = 200) {
