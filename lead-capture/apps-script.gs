@@ -19,6 +19,13 @@
  * The page sends text/plain JSON:
  * { firstName, email, phone, scores, gaps, peakScore, submittedAt, source }
  * source is "start-peak-wheel".
+ *
+ * scores is keyed by area id. Current quizzes use the seven Wheel of Life ids:
+ * physical-body, emotions-meaning, relationships, time, work-career-mission,
+ * finances, celebrate-contribute. work-career-mission may include kind
+ * (job, career, or mission) and kindLabel.
+ * Older rows use body, mind, love, tribe, mission, wealth, time-energy,
+ * impact-joy. This script stores whichever ids arrive. It does not rewrite them.
  */
 
 var ALERT_TO = 'n@naeemmood.com';
@@ -73,7 +80,9 @@ function alertBody_(data) {
   if (!gaps.length) lines.push('(none)');
   for (var i = 0; i < gaps.length; i++) {
     var gap = gaps[i] || {};
-    lines.push((i + 1) + '. ' + (gap.label || gap.id || 'Area') + ' (' + (gap.score != null ? gap.score : '') + '/10)');
+    var gapName = gap.label || gap.id || 'Area';
+    if (gap.kindLabel) gapName += ' (' + gap.kindLabel + ')';
+    lines.push((i + 1) + '. ' + gapName + ' (' + (gap.score != null ? gap.score : '') + '/10)');
     if (gap.cost) lines.push('   ' + gap.cost);
   }
   lines.push('');
