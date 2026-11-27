@@ -1,0 +1,62 @@
+# Keep the protocol PDF inline so target="_blank" opens it in a tab.
+/gifts/peak-humans-daily-protocol.pdf
+  Content-Type: application/pdf
+  Content-Disposition: inline
+  X-Content-Type-Options: nosniff
+
+# Hidden contact card. Keep it out of search results.
+/connect
+  X-Robots-Tag: noindex, nofollow
+/connect/
+  X-Robots-Tag: noindex, nofollow
+/connect.html
+  X-Robots-Tag: noindex, nofollow
+
+/naeem-mahmood.vcf
+  Content-Type: text/vcard; charset=utf-8
+  Content-Disposition: attachment; filename="naeem-mahmood.vcf"
+  X-Content-Type-Options: nosniff
+
+# Private and post-purchase pages. Keep them out of search results.
+/peak-life-os-private
+  X-Robots-Tag: noindex, nofollow
+/peak-life-os-private.html
+  X-Robots-Tag: noindex, nofollow
+/research-private
+  X-Robots-Tag: noindex, nofollow
+/research-private.html
+  X-Robots-Tag: noindex, nofollow
+/protocols-private
+  X-Robots-Tag: noindex, nofollow
+/protocols-private.html
+  X-Robots-Tag: noindex, nofollow
+/research-overview-private
+  X-Robots-Tag: noindex, nofollow
+/research-overview-private.html
+  X-Robots-Tag: noindex, nofollow
+/research-products-private
+  X-Robots-Tag: noindex, nofollow
+/research-products-private.html
+  X-Robots-Tag: noindex, nofollow
+/fountain-life-private
+  X-Robots-Tag: noindex, nofollow
+/fountain-life-private.html
+  X-Robots-Tag: noindex, nofollow
+/peak-life-os-welcome
+  X-Robots-Tag: noindex, nofollow
+/peak-life-os-welcome.html
+  X-Robots-Tag: noindex, nofollow
+/peakhuman/offer
+  X-Robots-Tag: noindex, nofollow
+/peakhuman/offer/
+  X-Robots-Tag: noindex, nofollow
+/peakhuman/offer/index.html
+  X-Robots-Tag: noindex, nofollow
+
+# Unlisted retreat. Header only. The path is not listed in robots.txt.
+/sacred-union-egypt-2027
+  X-Robots-Tag: noindex, nofollow
+/sacred-union-egypt-2027/
+  X-Robots-Tag: noindex, nofollow
+/sacred-union-egypt-2027/index.html
+  X-Robots-Tag: noindex, nofollow

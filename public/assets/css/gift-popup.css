@@ -1,0 +1,237 @@
+/* Peak Humans Daily Protocol opt-in. Scoped so it does not restyle the site. */
+
+.gift-popup {
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text, #f5f5f5);
+  width: min(440px, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 1.5rem);
+  overflow: visible;
+}
+
+.gift-popup:focus {
+  outline: none;
+}
+
+.gift-popup::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.gift-popup__card {
+  position: relative;
+  max-height: calc(100dvh - 1.5rem);
+  overflow: auto;
+  padding: 2.25rem 1.75rem 1.75rem;
+  background: var(--color-bg-card, #141414);
+  border: 1px solid var(--color-border, rgba(245, 245, 245, 0.12));
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 240, 255, 0.08);
+  text-align: center;
+}
+
+.gift-popup__card::before {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 2px;
+  margin: 0 auto 1.15rem;
+  background: var(--color-accent, #00f0ff);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+}
+
+.gift-popup__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border, rgba(245, 245, 245, 0.12));
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text, #f5f5f5);
+  font: 400 1.35rem/1 var(--font-sans, Inter, sans-serif);
+  cursor: pointer;
+}
+
+.gift-popup__close:hover,
+.gift-popup__close:focus-visible {
+  color: var(--color-bg, #0a0a0a);
+  background: var(--color-accent, #00f0ff);
+  border-color: var(--color-accent, #00f0ff);
+  outline: none;
+}
+
+.gift-popup__eyebrow {
+  margin: 0 0 0.7rem;
+  color: var(--color-accent, #00f0ff);
+  font-family: var(--font-sans, Inter, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gift-popup__card h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+  font-size: clamp(1.65rem, 4vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--color-white, #fff);
+}
+
+.gift-popup__lead,
+.gift-popup__thanks p {
+  margin: 0 auto 1.35rem;
+  max-width: 34rem;
+  color: var(--color-text-muted, #999);
+  font-family: var(--font-sans, Inter, sans-serif);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.gift-popup__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  text-align: left;
+}
+
+.gift-popup__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--color-text, #f5f5f5);
+  font-family: var(--font-sans, Inter, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.gift-popup__label span {
+  color: var(--color-text-muted, #999);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.gift-popup__input {
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--color-border, rgba(245, 245, 245, 0.12));
+  border-radius: 10px;
+  background: var(--color-bg, #0a0a0a);
+  color: var(--color-white, #fff);
+  font-family: var(--font-sans, Inter, sans-serif);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.gift-popup__input:focus {
+  outline: 2px solid var(--color-accent, #00f0ff);
+  outline-offset: 1px;
+  border-color: var(--color-accent, #00f0ff);
+}
+
+.gift-popup__submit {
+  margin-top: 0.25rem;
+  width: 100%;
+  padding: 0.95rem 1.25rem;
+  border: 2px solid var(--color-accent, #00f0ff);
+  border-radius: 999px;
+  background: var(--color-accent, #00f0ff);
+  color: var(--color-bg, #0a0a0a);
+  font-family: var(--font-sans, Inter, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(0, 240, 255, 0.28);
+}
+
+.gift-popup__submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.gift-popup__submit:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.gift-popup__submit:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.gift-popup__error {
+  min-height: 1.2em;
+  margin: 0;
+  color: #ffb4b4;
+  font-family: var(--font-sans, Inter, sans-serif);
+  font-size: 0.9rem;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+.gift-popup__note {
+  margin: 0.15rem 0 0;
+  color: var(--color-text-muted, #999);
+  font-family: var(--font-sans, Inter, sans-serif);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.gift-popup__download {
+  display: inline-block;
+  padding: 0.95rem 1.5rem;
+  border: 2px solid var(--color-accent, #00f0ff);
+  border-radius: 999px;
+  background: var(--color-accent, #00f0ff);
+  color: var(--color-bg, #0a0a0a);
+  font-family: var(--font-sans, Inter, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 0 10px 28px rgba(0, 240, 255, 0.28);
+}
+
+.gift-popup__download:hover {
+  color: var(--color-bg, #0a0a0a);
+}
+
+.gift-popup__download:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.gift-popup__thanks[hidden],
+.gift-popup__form[hidden] {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .gift-popup {
+    width: min(440px, calc(100vw - 1rem));
+  }
+
+  .gift-popup__card {
+    padding: 2rem 1.15rem 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-popup__submit:hover:not(:disabled) {
+    transform: none;
+  }
+}
